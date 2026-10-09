@@ -40,4 +40,9 @@ return [
         'secret_key' => env('RECAPTCHA_SECRET_KEY'),
     ],
 
+    'deploy_webhook' => [
+        'secret' => env('DEPLOY_WEBHOOK_SECRET'),
+        'script' => env('DEPLOY_WEBHOOK_SCRIPT', base_path('deploy.sh')),
+    ],
+
 ];
