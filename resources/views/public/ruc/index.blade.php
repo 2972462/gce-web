@@ -28,6 +28,7 @@
             @unless (config('services.recaptcha.site_key'))
                 <p class="mt-1.5 text-xs text-amber-600">reCAPTCHA sin configurar todavía (modo desarrollo).</p>
             @endunless
+            <p class="mt-1.5 text-sm text-red-600" x-show="errorVivo">No se pudo buscar en vivo. Probá de nuevo o apretá "Buscar".</p>
         </form>
 
         <template x-if="resultados !== null">
@@ -87,38 +88,59 @@
                     // IP/puntaje/etc.) sigue siendo solo la del botón
                     // "Buscar"/Enter -ver RucController::buscar()-; esta vista
                     // previa en vivo usa un endpoint aparte que no guarda nada.
+                    errorVivo: false,
+
                     async buscarEnVivo(valor) {
                         const texto = valor.trim();
                         if (texto.length < 3) {
                             this.resultados = texto === '' ? null : this.resultados;
+                            this.errorVivo = false;
+
                             return;
                         }
 
-                        const token = await this.obtenerRecaptchaToken();
+                        this.errorVivo = false;
+
                         try {
+                            const token = await this.obtenerRecaptchaToken();
                             const url = `{{ route('publico.ruc.buscar-vivo') }}?${new URLSearchParams({ consulta: texto, recaptcha_token: token })}`;
                             const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
-                            if (!response.ok) return;
+                            if (!response.ok) {
+                                this.errorVivo = true;
+
+                                return;
+                            }
                             const data = await response.json();
                             this.resultados = data.resultados;
                             this.buscado = data.buscado;
                         } catch (e) {
-                            // Sin conexión o similar: no interrumpe al que sigue
-                            // escribiendo, total "Buscar" sigue andando siempre.
+                            // Sin conexión, reCAPTCHA que no cargó, etc.: se
+                            // avisa en vez de quedar en silencio -"Buscar"
+                            // (recarga completa de página) sigue andando
+                            // siempre como alternativa-.
+                            this.errorVivo = true;
                         }
                     },
 
+                    // Nunca deja esperando para siempre: si grecaptcha.ready()
+                    // no llega a ejecutar el callback (script bloqueado,
+                    // adblock, etc.) o .execute() rechaza la promesa, se
+                    // resuelve igual a los 4s para no trabar la búsqueda.
                     obtenerRecaptchaToken() {
-                        return new Promise((resolve) => {
-                            if (!this.recaptchaSiteKey || typeof grecaptcha === 'undefined') {
-                                resolve('');
+                        if (!this.recaptchaSiteKey || typeof grecaptcha === 'undefined') {
+                            return Promise.resolve('');
+                        }
 
-                                return;
-                            }
+                        const token = new Promise((resolve) => {
                             grecaptcha.ready(() => {
-                                grecaptcha.execute(this.recaptchaSiteKey, { action: 'consulta_ruc' }).then(resolve);
+                                grecaptcha.execute(this.recaptchaSiteKey, { action: 'consulta_ruc' })
+                                    .then(resolve)
+                                    .catch(() => resolve(''));
                             });
                         });
+                        const limite = new Promise((resolve) => setTimeout(() => resolve(''), 4000));
+
+                        return Promise.race([token, limite]);
                     },
 
                     // Mismo criterio que RucBuscador::nombreLegible(): las
