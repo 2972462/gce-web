@@ -8,7 +8,16 @@ cd "$(dirname "$0")"
 # interactiva: node/npm instalados vía nvm no aparecen sin esto.
 export PATH="/home/gce/.nvm/versions/node/v20.20.2/bin:$PATH"
 
+antes="$(git rev-parse HEAD)"
 git pull origin main
+despues="$(git rev-parse HEAD)"
+
+# bash ya tiene este archivo leído en memoria: si git pull lo cambió,
+# nos reiniciamos para correr con el contenido nuevo en vez de seguir
+# ejecutando el script viejo hasta el final.
+if [ "$antes" != "$despues" ]; then
+    exec bash "$0" "$@"
+fi
 
 composer install --no-dev --optimize-autoloader
 npm ci
