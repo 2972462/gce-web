@@ -2,11 +2,27 @@
 
 use App\Http\Controllers\DeployWebhookController;
 use App\Http\Controllers\ProfileController;
+use App\Models\PatenteComercialTramo;
 use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome', ['siteSetting' => SiteSetting::actual()]);
+    $tramos = PatenteComercialTramo::orderBy('orden')->get();
+
+    // Enteros/float planos (no el modelo completo) para que el JSON
+    // embebido no arrastre el problema de precision del "999999999999999".
+    $tramosParaJs = $tramos->map(fn (PatenteComercialTramo $t) => [
+        'desde' => (int) $t->monto_desde,
+        'hasta' => (int) $t->monto_hasta,
+        'porcentaje' => (float) $t->porcentaje,
+        'adicional' => (int) $t->adicional,
+    ]);
+
+    return view('welcome', [
+        'siteSetting' => SiteSetting::actual(),
+        'tramos' => $tramos,
+        'tramosParaJs' => $tramosParaJs,
+    ]);
 });
 
 Route::post('/deploy-webhook', [DeployWebhookController::class, 'handle'])->name('deploy-webhook');

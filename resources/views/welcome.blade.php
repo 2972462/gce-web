@@ -128,7 +128,8 @@
         </div>
 
         <div class="grid lg:grid-cols-2 gap-6 items-start">
-            <div id="calculadora-patente" class="bg-white rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200 p-6">
+            <div id="calculadora-patente" class="bg-white rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200 p-6"
+                 x-data="patenteCalculadora({{ Js::from($tramosParaJs) }}, {{ Js::from(old('monto', '')) }})">
                 <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-base mb-3">💰</div>
                 <h3 class="font-bold text-slate-900 mb-1">Patente Comercial</h3>
                 <p class="text-xs text-slate-500 mb-5">Cálculo según la Ley N° 135/91, con el detalle de las dos cuotas semestrales.</p>
@@ -137,9 +138,15 @@
                     @csrf
                     <div>
                         <label for="monto" class="block text-sm font-semibold text-slate-700 mb-1.5">Monto del activo declarado (Gs.)</label>
-                        <input id="monto" name="monto" type="text" inputmode="numeric" value="{{ old('monto') }}"
-                               placeholder="15.000.000"
-                               class="block w-full rounded-xl border-slate-300 shadow-sm focus:border-amber-500 focus:ring-amber-500">
+                        <div class="relative">
+                            <input id="monto" name="monto" type="text" inputmode="numeric" :value="montoFormateado" @input="actualizarMonto($event)"
+                                   placeholder="15.000.000"
+                                   class="block w-full text-right tabular-nums pr-9 rounded-xl border-slate-300 shadow-sm focus:border-amber-500 focus:ring-amber-500">
+                            <button type="button" x-show="monto !== ''" x-cloak @click="monto = ''" title="Limpiar"
+                                    class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                            </button>
+                        </div>
                         @error('monto')
                             <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -163,26 +170,85 @@
                     </button>
                 </form>
 
-                @if (!session('buscado') && ($resultadoPatente = session('resultado')))
-                    <div class="mt-6 pt-5 border-t border-slate-200">
-                        <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Impuesto total</div>
-                        <div class="text-xl font-extrabold text-slate-900 mb-4">Gs. {{ number_format($resultadoPatente['impuesto'], 0, ',', '.') }}</div>
-                        <div class="grid grid-cols-2 gap-4 text-sm">
-                            <div class="bg-slate-50 rounded-xl p-4">
-                                <div class="text-xs text-slate-500 mb-1">1ra cuota</div>
-                                <div class="font-bold text-slate-900">Gs. {{ number_format($resultadoPatente['semestre1'], 0, ',', '.') }}</div>
-                            </div>
-                            <div class="bg-slate-50 rounded-xl p-4">
-                                <div class="text-xs text-slate-500 mb-1">2da cuota</div>
-                                <div class="font-bold text-slate-900">Gs. {{ number_format($resultadoPatente['semestre2'], 0, ',', '.') }}</div>
-                            </div>
+                <div x-show="resultado" x-cloak class="mt-6 pt-5 border-t border-slate-200">
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div>
+                            <div class="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Total anual</div>
+                            <div class="text-lg font-extrabold text-slate-900" x-text="'Gs. ' + formatearGs(resultado?.impuesto)"></div>
                         </div>
-                        <p class="mt-4 text-xs text-slate-500">
-                            Tramo: Gs. {{ number_format($resultadoPatente['tramo']['monto_desde'], 0, ',', '.') }} a Gs. {{ number_format($resultadoPatente['tramo']['monto_hasta'], 0, ',', '.') }}
-                            ({{ number_format($resultadoPatente['tramo']['porcentaje'], 2, ',', '.') }}% + Gs. {{ number_format($resultadoPatente['tramo']['adicional'], 0, ',', '.') }})
-                        </p>
+                        <div class="border-l border-slate-100 pl-3">
+                            <div class="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">1er semestre</div>
+                            <div class="text-sm font-bold text-slate-700" x-text="'Gs. ' + formatearGs(resultado?.semestre1)"></div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">2do semestre</div>
+                            <div class="text-sm font-bold text-slate-700" x-text="'Gs. ' + formatearGs(resultado?.semestre2)"></div>
+                        </div>
                     </div>
-                @endif
+
+                    <div class="bg-slate-50 rounded-xl p-3 text-xs text-slate-600 grid grid-cols-2 gap-x-3 gap-y-2">
+                        <div>
+                            <div class="text-slate-400">Tramo</div>
+                            <div class="font-semibold" x-text="'Gs. ' + formatearGs(resultado?.tramo?.desde) + ' a Gs. ' + formatearGs(resultado?.tramo?.hasta)"></div>
+                        </div>
+                        <div>
+                            <div class="text-slate-400">Excedente</div>
+                            <div class="font-semibold" x-text="'Gs. ' + formatearGs(resultado?.excedente)"></div>
+                        </div>
+                        <div>
+                            <div class="text-slate-400">Porcentaje</div>
+                            <div class="font-semibold" x-text="resultado?.tramo?.porcentaje + '%'"></div>
+                        </div>
+                        <div>
+                            <div class="text-slate-400">Adicional fijo</div>
+                            <div class="font-semibold" x-text="'Gs. ' + formatearGs(resultado?.tramo?.adicional)"></div>
+                        </div>
+                    </div>
+                    <p class="mt-2 text-[11px] font-mono text-slate-500">
+                        Imp. Pat. (<span x-text="formatearGs(resultado?.monto)"></span>
+                        − <span x-text="formatearGs(resultado?.tramo?.desde)"></span>)
+                        × <span x-text="resultado?.tramo?.porcentaje"></span>%
+                        ** Adicional de Gs.: <span x-text="formatearGs(resultado?.tramo?.adicional)"></span>
+                        = <span class="font-bold text-slate-700" x-text="formatearGs(resultado?.impuesto)"></span>
+                    </p>
+                </div>
+
+                <details class="mt-5 pt-4 border-t border-slate-200">
+                    <summary class="text-[11px] font-bold uppercase tracking-wide text-slate-400 cursor-pointer select-none">Escala de tramos vigente</summary>
+                    <div class="mt-3 -mx-6 px-6 overflow-x-auto">
+                        <table class="min-w-full text-xs">
+                            <thead class="text-slate-400 uppercase tracking-wide text-[10px]">
+                                <tr>
+                                    <th class="py-1.5 text-left">Desde</th>
+                                    <th class="py-1.5 text-left">Hasta</th>
+                                    <th class="py-1.5 text-right">%</th>
+                                    <th class="py-1.5 text-right">Adicional</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                @foreach ($tramos as $tramo)
+                                    @php
+                                        $condicion = $loop->last
+                                            ? "montoNumerico !== null && montoNumerico >= {$tramo->monto_desde}"
+                                            : "montoNumerico !== null && montoNumerico >= {$tramo->monto_desde} && montoNumerico < {$tramo->monto_hasta}";
+                                    @endphp
+                                    <tr :class="{{ $condicion }} ? 'bg-amber-50 font-bold text-amber-700' : 'text-slate-600'">
+                                        <td class="py-1.5 tabular-nums">{{ number_format($tramo->monto_desde, 0, ',', '.') }}</td>
+                                        <td class="py-1.5 tabular-nums">
+                                            @if ($loop->last)
+                                                En adelante
+                                            @else
+                                                {{ number_format($tramo->monto_hasta, 0, ',', '.') }}
+                                            @endif
+                                        </td>
+                                        <td class="py-1.5 text-right tabular-nums">{{ rtrim(rtrim(number_format($tramo->porcentaje, 2, ',', '.'), '0'), ',') }}%</td>
+                                        <td class="py-1.5 text-right tabular-nums">{{ number_format($tramo->adicional, 0, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
             </div>
 
             <div id="calculadora-ruc" class="bg-white rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200 p-6">
@@ -587,6 +653,46 @@
         </div>
     </div>
 </footer>
+
+<script>
+    function patenteCalculadora(tramos, montoInicial) {
+        return {
+            tramos,
+            monto: montoInicial ? String(montoInicial).replace(/\D/g, '') : '',
+
+            get montoNumerico() {
+                return this.monto === '' ? null : Number(this.monto);
+            },
+
+            get montoFormateado() {
+                return this.monto === '' ? '' : this.formatearGs(this.monto);
+            },
+
+            get resultado() {
+                if (this.montoNumerico === null) return null;
+
+                const monto = this.montoNumerico;
+                const tramo = this.tramos.find((t) => monto >= t.desde && monto < t.hasta) || this.tramos[this.tramos.length - 1];
+                const excedente = Math.max(0, monto - tramo.desde);
+                const impuesto = Math.round(tramo.adicional + (excedente * tramo.porcentaje) / 100);
+                const semestre1 = Math.floor(impuesto / 2);
+                const semestre2 = impuesto - semestre1;
+
+                return { monto, tramo, excedente, impuesto, semestre1, semestre2 };
+            },
+
+            actualizarMonto(event) {
+                this.monto = event.target.value.replace(/\D/g, '');
+                event.target.value = this.montoFormateado;
+            },
+
+            formatearGs(valor) {
+                if (valor === null || valor === undefined || valor === '') return '';
+                return new Intl.NumberFormat('es-PY', { maximumFractionDigits: 0 }).format(valor);
+            },
+        };
+    }
+</script>
 
 @vite(['resources/js/app.js'])
 </body>
