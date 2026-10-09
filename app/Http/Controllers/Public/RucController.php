@@ -7,6 +7,7 @@ use App\Models\ConsultaRuc;
 use App\Rules\Recaptcha;
 use App\Services\RucBuscador;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -56,5 +57,31 @@ class RucController extends Controller
             'resultados' => $resultados,
             'buscado' => $datos['consulta'],
         ]);
+    }
+
+    /**
+     * Vista previa en vivo mientras se tipea -mismo buscador que
+     * buscar(), pero sin guardar en ConsultaRuc: esa tabla queda para la
+     * búsqueda que la persona realmente decide hacer (botón "Buscar" o
+     * Enter), no cada letra que tipeó en el camino.
+     */
+    public function buscarEnVivo(Request $request, RucBuscador $buscador): JsonResponse
+    {
+        $recaptcha = new Recaptcha;
+
+        $datos = $request->validate([
+            'consulta' => ['required', 'string', 'min:3', 'max:255'],
+            'recaptcha_token' => [$recaptcha],
+        ]);
+
+        try {
+            $resultados = $buscador->buscar($datos['consulta']);
+        } catch (QueryException $e) {
+            Log::error('Error consultando la base auxiliar de RUC: '.$e->getMessage());
+
+            return response()->json(['error' => 'El servicio de consulta no esta disponible en este momento.'], 503);
+        }
+
+        return response()->json(['resultados' => $resultados, 'buscado' => $datos['consulta']]);
     }
 }

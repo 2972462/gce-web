@@ -154,9 +154,12 @@ class RucConsultaTest extends TestCase
 
         $response->assertSessionHasNoErrors();
 
+        // El conteo ("2 coincidencias") y el armado de la lista ahora los
+        // arma Alpine en el navegador a partir del JSON embebido en
+        // x-data -lo que importa verificar acá es que los dos resultados
+        // realmente lleguen a la vista, no el texto ya renderizado-.
         $this->get(route('publico.ruc.index'))
             ->assertOk()
-            ->assertSee('2 coincidencias')
             ->assertSee('Empresa Uno S.A.')
             ->assertSee('Empresa Dos S.R.L.');
 
@@ -191,5 +194,60 @@ class RucConsultaTest extends TestCase
         $this->get(route('publico.ruc.index'))
             ->assertOk()
             ->assertSee('No se encontraron resultados');
+    }
+
+    public function test_la_busqueda_en_vivo_devuelve_json_sin_guardar_en_consultas_ruc(): void
+    {
+        config(['services.recaptcha.secret_key' => 'secret-de-prueba']);
+
+        Http::fake([
+            'https://www.google.com/recaptcha/api/siteverify' => Http::response(['success' => true, 'score' => 0.9]),
+        ]);
+
+        $this->mock(RucBuscador::class)
+            ->shouldReceive('buscar')
+            ->with('Empresa')
+            ->once()
+            ->andReturn([
+                ['ruc' => '1', 'digito_verificador' => '1', 'ruc_completo' => '1-1', 'razon_social' => 'Empresa Uno S.A.', 'estado' => 'ACTIVO'],
+            ]);
+
+        $response = $this->getJson(route('publico.ruc.buscar-vivo', [
+            'consulta' => 'Empresa',
+            'recaptcha_token' => 'token-valido',
+        ]));
+
+        $response->assertOk();
+        $response->assertJsonPath('resultados.0.razon_social', 'Empresa Uno S.A.');
+        $response->assertJsonPath('buscado', 'Empresa');
+
+        // A diferencia de buscar(), esta vista previa no se audita.
+        $this->assertDatabaseCount('consultas_ruc', 0);
+    }
+
+    public function test_la_busqueda_en_vivo_tambien_exige_recaptcha_valido(): void
+    {
+        config(['services.recaptcha.secret_key' => 'secret-de-prueba']);
+
+        Http::fake([
+            'https://www.google.com/recaptcha/api/siteverify' => Http::response(['success' => true, 'score' => 0.1]),
+        ]);
+
+        $this->mock(RucBuscador::class)->shouldNotReceive('buscar');
+
+        $this->getJson(route('publico.ruc.buscar-vivo', [
+            'consulta' => 'Empresa',
+            'recaptcha_token' => 'token-de-bot',
+        ]))->assertJsonValidationErrors('recaptcha_token');
+    }
+
+    public function test_la_busqueda_en_vivo_exige_al_menos_3_caracteres(): void
+    {
+        $this->mock(RucBuscador::class)->shouldNotReceive('buscar');
+
+        $this->getJson(route('publico.ruc.buscar-vivo', [
+            'consulta' => 'ab',
+            'recaptcha_token' => 'token',
+        ]))->assertJsonValidationErrors('consulta');
     }
 }
