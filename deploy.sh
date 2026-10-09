@@ -4,6 +4,10 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# El webhook lo dispara PHP-FPM, que no hereda el PATH de una shell
+# interactiva: node/npm instalados vía nvm no aparecen sin esto.
+export PATH="/home/gce/.nvm/versions/node/v20.20.2/bin:$PATH"
+
 git pull origin main
 
 composer install --no-dev --optimize-autoloader
