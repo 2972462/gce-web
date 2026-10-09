@@ -52,13 +52,16 @@ class RucBuscador
      * "roberto rodriguez arias" trae cualquier fila con solo "roberto"
      * (nombre muy comun) y devuelve el tope de 200 filas sin que
      * ninguna sea realmente relevante. Anteponiendo "+" a cada palabra
-     * se le pide que coincidan todas (en cualquier orden).
+     * se le pide que coincidan todas (en cualquier orden). El "*" al
+     * final de cada una pide ademas una coincidencia por prefijo, no
+     * exacta -asi "muni irala" encuentra "MUNICIPALIDAD ... IRALA ...",
+     * aunque "muni" no sea una palabra completa del registro-.
      */
     private function comoConsultaBooleana(string $texto): string
     {
         $palabras = preg_split('/\s+/', trim($texto), -1, PREG_SPLIT_NO_EMPTY);
 
-        return implode(' ', array_map(fn (string $palabra) => '+'.$palabra, $palabras));
+        return implode(' ', array_map(fn (string $palabra) => '+'.$palabra.'*', $palabras));
     }
 
     private function mapearFila(object $fila): array

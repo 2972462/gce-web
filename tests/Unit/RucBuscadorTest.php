@@ -44,10 +44,27 @@ class RucBuscadorTest extends TestCase
             ->andReturnSelf();
         DB::shouldReceive('select')
             ->once()
-            ->with('CALL fn_razon_social(?)', ['+Empresa +Uno'])
+            ->with('CALL fn_razon_social(?)', ['+Empresa* +Uno*'])
             ->andReturn([]);
 
         (new RucBuscador)->buscar('Empresa Uno');
+    }
+
+    /**
+     * El "*" de prefijo es lo que permite que una palabra incompleta
+     * (ej. "muni" en vez de "municipalidad") igual encuentre coincidencias.
+     */
+    public function test_el_prefijo_de_una_palabra_tambien_encuentra_coincidencias(): void
+    {
+        DB::shouldReceive('connection')
+            ->with('auxiliar')
+            ->andReturnSelf();
+        DB::shouldReceive('select')
+            ->once()
+            ->with('CALL fn_razon_social(?)', ['+muni* +irala*'])
+            ->andReturn([]);
+
+        (new RucBuscador)->buscar('muni irala');
     }
 
     public function test_corta_los_resultados_de_nombre_en_20(): void
