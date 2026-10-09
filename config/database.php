@@ -114,6 +114,24 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        // Base externa de solo lectura con el padron de RUC (tabla `rucs`,
+        // consultada via stored procedure `fn_ruc`). Compartida con el ERP,
+        // acceso con un usuario de MySQL separado y de solo lectura.
+        'auxiliar' => [
+            'driver' => 'mysql',
+            'url' => env('AUX_DB_URL'),
+            'host' => env('AUX_DB_HOST', '127.0.0.1'),
+            'port' => env('AUX_DB_PORT', '3306'),
+            'database' => env('AUX_DB_DATABASE', 'auxiliar'),
+            'username' => env('AUX_DB_USERNAME', ''),
+            'password' => env('AUX_DB_PASSWORD', ''),
+            'charset' => env('AUX_DB_CHARSET', 'utf8mb4'),
+            'collation' => env('AUX_DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
     ],
 
     /*
