@@ -668,7 +668,7 @@
             },
 
             get resultado() {
-                if (this.montoNumerico === null) return null;
+                if (this.montoNumerico === null || !this.tramos.length) return null;
 
                 const monto = this.montoNumerico;
                 const tramo = this.tramos.find((t) => monto >= t.desde && monto < t.hasta) || this.tramos[this.tramos.length - 1];
