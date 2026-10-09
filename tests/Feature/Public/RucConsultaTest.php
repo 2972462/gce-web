@@ -3,11 +3,14 @@
 namespace Tests\Feature\Public;
 
 use App\Services\RucBuscador;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class RucConsultaTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_la_pagina_de_consulta_carga(): void
     {
         $this->get(route('publico.ruc.index'))
@@ -116,6 +119,13 @@ class RucConsultaTest extends TestCase
             ->assertOk()
             ->assertSee('Empresa de Prueba S.A.')
             ->assertSee('80012345-6');
+
+        $this->assertDatabaseHas('consultas_ruc', [
+            'ruc_buscado' => '80012345',
+            'encontrado' => true,
+            'razon_social' => 'Empresa de Prueba S.A.',
+            'recaptcha_score' => 0.9,
+        ]);
     }
 
     public function test_ruc_no_encontrado_muestra_mensaje(): void

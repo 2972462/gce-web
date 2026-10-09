@@ -18,6 +18,9 @@ class Recaptcha implements ValidationRule
 {
     private const UMBRAL_MINIMO = 0.5;
 
+    /** Puntaje devuelto por Google en la ultima verificacion (null si no llego a consultarse). */
+    public ?float $score = null;
+
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $secretKey = config('services.recaptcha.secret_key');
@@ -45,7 +48,9 @@ class Recaptcha implements ValidationRule
             return;
         }
 
-        if ((float) $respuesta->json('score', 0) < self::UMBRAL_MINIMO) {
+        $this->score = (float) $respuesta->json('score', 0);
+
+        if ($this->score < self::UMBRAL_MINIMO) {
             $fail('No pudimos verificar que sos una persona. Recarga la pagina e intenta de nuevo.');
         }
     }

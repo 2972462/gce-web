@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('admin.site-settings.edit')" :active="request()->routeIs('admin.site-settings.*')">
                         {{ __('Configuración') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.consultas-ruc.index')" :active="request()->routeIs('admin.consultas-ruc.*')">
+                        {{ __('Consultas RUC') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -81,6 +84,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.site-settings.edit')" :active="request()->routeIs('admin.site-settings.*')">
                 {{ __('Configuración') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.consultas-ruc.index')" :active="request()->routeIs('admin.consultas-ruc.*')">
+                {{ __('Consultas RUC') }}
             </x-responsive-nav-link>
         </div>
 
