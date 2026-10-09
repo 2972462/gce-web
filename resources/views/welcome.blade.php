@@ -216,27 +216,27 @@
 </section>
 
 <!-- HERRAMIENTAS: PATENTE + RUC -->
-<section id="calculadora" class="py-24 px-6 bg-gradient-to-b from-slate-50 to-white">
-    <div class="max-w-6xl mx-auto">
-        <div class="max-w-2xl mx-auto text-center mb-14">
-            <div class="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
+<section id="calculadora" class="py-16 px-6 bg-gradient-to-b from-slate-50 to-white">
+    <div class="max-w-5xl mx-auto">
+        <div class="max-w-2xl mx-auto text-center mb-8">
+            <div class="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-sky-600 uppercase mb-3">
                 <span class="w-7 h-0.5 bg-amber-500"></span> Herramientas gratuitas <span class="w-7 h-0.5 bg-amber-500"></span>
             </div>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight text-balance">
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight text-balance">
                 Resolvé trámites al instante
             </h2>
-            <p class="mt-4 text-slate-600 leading-relaxed">
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">
                 Dos herramientas públicas, sin registro: calculá tu Patente Comercial y verificá un RUC paraguayo en segundos.
             </p>
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-8 items-start">
-            <div id="calculadora-patente" class="bg-white rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-200 p-8">
-                <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg mb-4">💰</div>
-                <h3 class="font-bold text-lg text-slate-900 mb-1">Patente Comercial</h3>
-                <p class="text-sm text-slate-500 mb-6">Cálculo según la Ley N° 135/91, con el detalle de las dos cuotas semestrales.</p>
+        <div class="grid lg:grid-cols-2 gap-6 items-start">
+            <div id="calculadora-patente" class="bg-white rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200 p-6">
+                <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-base mb-3">💰</div>
+                <h3 class="font-bold text-slate-900 mb-1">Patente Comercial</h3>
+                <p class="text-xs text-slate-500 mb-5">Cálculo según la Ley N° 135/91, con el detalle de las dos cuotas semestrales.</p>
 
-                <form method="POST" action="{{ route('publico.patente.calcular') }}" class="space-y-5">
+                <form method="POST" action="{{ route('publico.patente.calcular') }}" class="space-y-4">
                     @csrf
                     <div>
                         <label for="monto" class="block text-sm font-semibold text-slate-700 mb-1.5">Monto del activo declarado (Gs.)</label>
@@ -250,7 +250,9 @@
 
                     <div>
                         @if (config('services.recaptcha.site_key'))
-                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                            <div class="scale-[0.85] origin-left -my-1.5">
+                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                            </div>
                         @else
                             <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía.</p>
                         @endif
@@ -259,15 +261,15 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="w-full px-6 py-3.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition">
+                    <button type="submit" class="w-full px-6 py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition">
                         Calcular impuesto
                     </button>
                 </form>
 
                 @if (!session('buscado') && ($resultadoPatente = session('resultado')))
-                    <div class="mt-8 pt-6 border-t border-slate-200">
+                    <div class="mt-6 pt-5 border-t border-slate-200">
                         <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Impuesto total</div>
-                        <div class="text-2xl font-extrabold text-slate-900 mb-5">Gs. {{ number_format($resultadoPatente['impuesto'], 0, ',', '.') }}</div>
+                        <div class="text-xl font-extrabold text-slate-900 mb-4">Gs. {{ number_format($resultadoPatente['impuesto'], 0, ',', '.') }}</div>
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div class="bg-slate-50 rounded-xl p-4">
                                 <div class="text-xs text-slate-500 mb-1">1ra cuota</div>
@@ -286,12 +288,12 @@
                 @endif
             </div>
 
-            <div id="calculadora-ruc" class="bg-white rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-200 p-8">
-                <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-lg mb-4">🔎</div>
-                <h3 class="font-bold text-lg text-slate-900 mb-1">Consulta de RUC</h3>
-                <p class="text-sm text-slate-500 mb-6">Verificá la razón social y el estado de un RUC paraguayo.</p>
+            <div id="calculadora-ruc" class="bg-white rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200 p-6">
+                <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-base mb-3">🔎</div>
+                <h3 class="font-bold text-slate-900 mb-1">Consulta de RUC</h3>
+                <p class="text-xs text-slate-500 mb-5">Verificá la razón social y el estado de un RUC paraguayo.</p>
 
-                <form method="POST" action="{{ route('publico.ruc.buscar') }}" class="space-y-5">
+                <form method="POST" action="{{ route('publico.ruc.buscar') }}" class="space-y-4">
                     @csrf
                     <div>
                         <label for="ruc" class="block text-sm font-semibold text-slate-700 mb-1.5">Número de RUC</label>
@@ -305,7 +307,9 @@
 
                     <div>
                         @if (config('services.recaptcha.site_key'))
-                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                            <div class="scale-[0.85] origin-left -my-1.5">
+                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                            </div>
                         @else
                             <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía.</p>
                         @endif
@@ -314,16 +318,16 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="w-full px-6 py-3.5 rounded-xl bg-sky-600 text-white font-semibold text-sm hover:bg-sky-700 transition">
+                    <button type="submit" class="w-full px-6 py-3 rounded-xl bg-sky-600 text-white font-semibold text-sm hover:bg-sky-700 transition">
                         Consultar RUC
                     </button>
                 </form>
 
                 @if (session('buscado'))
-                    <div class="mt-8 pt-6 border-t border-slate-200">
+                    <div class="mt-6 pt-5 border-t border-slate-200">
                         @if ($resultadoRuc = session('resultado'))
                             <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Razón social</div>
-                            <div class="text-lg font-extrabold text-slate-900 mb-4">{{ $resultadoRuc['razon_social'] }}</div>
+                            <div class="text-base font-extrabold text-slate-900 mb-4">{{ $resultadoRuc['razon_social'] }}</div>
                             <div class="grid grid-cols-2 gap-4 text-sm">
                                 <div class="bg-slate-50 rounded-xl p-4">
                                     <div class="text-xs text-slate-500 mb-1">RUC</div>
