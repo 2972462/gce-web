@@ -42,7 +42,12 @@
                         </div>
                     </dl>
                 @elseif (count($resultados) > 1)
-                    <p class="text-sm text-gray-500 mb-4">{{ count($resultados) }} coincidencias para <strong>{{ session('buscado') }}</strong>:</p>
+                    <p class="text-sm text-gray-500 mb-1">{{ count($resultados) }} coincidencias para <strong>{{ session('buscado') }}</strong>:</p>
+                    @if (count($resultados) === \App\Services\RucBuscador::MAX_RESULTADOS_NOMBRE)
+                        <p class="text-xs text-gray-400 mb-4">Mostrando las primeras {{ \App\Services\RucBuscador::MAX_RESULTADOS_NOMBRE }}. Agregá más datos (apellido, segundo nombre) para afinar la búsqueda.</p>
+                    @else
+                        <div class="mb-4"></div>
+                    @endif
                     <ul class="divide-y divide-gray-100 border border-gray-100 rounded-lg overflow-hidden">
                         @foreach ($resultados as $fila)
                             <li class="px-4 py-3 text-sm">

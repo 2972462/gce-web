@@ -37,16 +37,33 @@ class RucBuscadorTest extends TestCase
         (new RucBuscador)->buscar('80012345');
     }
 
-    public function test_un_texto_con_letras_busca_por_fn_razon_social(): void
+    public function test_un_texto_con_letras_busca_por_fn_razon_social_exigiendo_todas_las_palabras(): void
     {
         DB::shouldReceive('connection')
             ->with('auxiliar')
             ->andReturnSelf();
         DB::shouldReceive('select')
             ->once()
-            ->with('CALL fn_razon_social(?)', ['Empresa Uno'])
+            ->with('CALL fn_razon_social(?)', ['+Empresa +Uno'])
             ->andReturn([]);
 
         (new RucBuscador)->buscar('Empresa Uno');
+    }
+
+    public function test_corta_los_resultados_de_nombre_en_20(): void
+    {
+        $filas = array_map(fn (int $i) => (object) [
+            'ruc' => (string) $i,
+            'digito_verificador' => '1',
+            'razon_social' => "Empresa {$i}",
+            'estado' => 'ACTIVO',
+        ], range(1, 50));
+
+        DB::shouldReceive('connection')->with('auxiliar')->andReturnSelf();
+        DB::shouldReceive('select')->once()->andReturn($filas);
+
+        $resultado = (new RucBuscador)->buscar('Empresa');
+
+        $this->assertCount(20, $resultado);
     }
 }

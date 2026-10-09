@@ -6,11 +6,14 @@ use Illuminate\Support\Facades\DB;
 
 class RucBuscador
 {
+    /** Tope de coincidencias a mostrar en una busqueda por nombre (fn_razon_social trae hasta 200). */
+    public const MAX_RESULTADOS_NOMBRE = 20;
+
     /**
      * Busca por RUC (solo numeros/puntos/guiones) o por nombre/razon
      * social (si el texto tiene letras). Siempre devuelve una lista:
      * 0 filas si no hay coincidencias, 1 en una busqueda exacta por RUC,
-     * hasta 200 en una busqueda por nombre.
+     * hasta MAX_RESULTADOS_NOMBRE en una busqueda por nombre.
      */
     public function buscar(string $texto): array
     {
@@ -38,9 +41,24 @@ class RucBuscador
             return [];
         }
 
-        $filas = DB::connection('auxiliar')->select('CALL fn_razon_social(?)', [$texto]);
+        $filas = DB::connection('auxiliar')->select('CALL fn_razon_social(?)', [$this->comoConsultaBooleana($texto)]);
 
-        return array_map([$this, 'mapearFila'], $filas);
+        return array_map([$this, 'mapearFila'], array_slice($filas, 0, self::MAX_RESULTADOS_NOMBRE));
+    }
+
+    /**
+     * fn_razon_social usa MATCH ... AGAINST (... IN BOOLEAN MODE): sin
+     * operadores, MySQL junta las palabras con OR, asi que buscar
+     * "roberto rodriguez arias" trae cualquier fila con solo "roberto"
+     * (nombre muy comun) y devuelve el tope de 200 filas sin que
+     * ninguna sea realmente relevante. Anteponiendo "+" a cada palabra
+     * se le pide que coincidan todas (en cualquier orden).
+     */
+    private function comoConsultaBooleana(string $texto): string
+    {
+        $palabras = preg_split('/\s+/', trim($texto), -1, PREG_SPLIT_NO_EMPTY);
+
+        return implode(' ', array_map(fn (string $palabra) => '+'.$palabra, $palabras));
     }
 
     private function mapearFila(object $fila): array
