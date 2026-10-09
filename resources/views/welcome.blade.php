@@ -10,7 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @if (config('services.recaptcha.site_key'))
+        <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    @endif
 
     @vite(['resources/css/app.css'])
 
@@ -152,19 +154,6 @@
                         @enderror
                     </div>
 
-                    <div>
-                        @if (config('services.recaptcha.site_key'))
-                            <div class="scale-[0.85] origin-left -my-1.5">
-                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                            </div>
-                        @else
-                            <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía.</p>
-                        @endif
-                        @error('g-recaptcha-response')
-                            <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
                     <button type="submit" class="w-full px-6 py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition">
                         Calcular impuesto
                     </button>
@@ -255,34 +244,28 @@
                 <h3 class="font-bold text-slate-900 mb-1">Consulta de RUC</h3>
                 <p class="text-xs text-slate-500 mb-5">Verificá la razón social y el estado de un RUC paraguayo.</p>
 
-                <form method="POST" action="{{ route('publico.ruc.buscar') }}" class="space-y-4">
+                <form id="home-ruc-form" method="POST" action="{{ route('publico.ruc.buscar') }}">
                     @csrf
-                    <div>
-                        <label for="ruc" class="block text-sm font-semibold text-slate-700 mb-1.5">Número de RUC</label>
+                    <input type="hidden" name="recaptcha_token" id="home-recaptcha-token">
+
+                    <div class="relative flex items-center bg-slate-50 border border-slate-300 rounded-full shadow-sm focus-within:border-sky-500 focus-within:ring-1 focus-within:ring-sky-500 overflow-hidden">
+                        <svg class="w-4 h-4 ml-3.5 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3-3"/></svg>
                         <input id="ruc" name="ruc" type="text" inputmode="numeric" value="{{ old('ruc', session('buscado') ?? '') }}"
-                               placeholder="80012345"
-                               class="block w-full rounded-xl border-slate-300 shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                        @error('ruc')
-                            <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                               placeholder="Número de RUC"
+                               class="flex-1 min-w-0 border-0 bg-transparent focus:ring-0 text-sm py-2.5 px-2.5">
+                        <button type="submit" class="m-1 px-4 py-2 bg-sky-600 text-white text-sm font-semibold rounded-full hover:bg-sky-700 transition shrink-0">
+                            Buscar
+                        </button>
                     </div>
-
-                    <div>
-                        @if (config('services.recaptcha.site_key'))
-                            <div class="scale-[0.85] origin-left -my-1.5">
-                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                            </div>
-                        @else
-                            <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía.</p>
-                        @endif
-                        @error('g-recaptcha-response')
-                            <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <button type="submit" class="w-full px-6 py-3 rounded-xl bg-sky-600 text-white font-semibold text-sm hover:bg-sky-700 transition">
-                        Consultar RUC
-                    </button>
+                    @error('ruc')
+                        <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    @error('recaptcha_token')
+                        <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    @unless (config('services.recaptcha.site_key'))
+                        <p class="mt-1.5 text-xs text-amber-600">reCAPTCHA sin configurar todavía.</p>
+                    @endunless
                 </form>
 
                 @if (session('buscado'))
@@ -692,6 +675,21 @@
         };
     }
 </script>
+
+@if (config('services.recaptcha.site_key'))
+    <script>
+        document.getElementById('home-ruc-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const form = this;
+            grecaptcha.ready(function () {
+                grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', { action: 'consulta_ruc' }).then(function (token) {
+                    document.getElementById('home-recaptcha-token').value = token;
+                    form.submit();
+                });
+            });
+        });
+    </script>
+@endif
 
 @vite(['resources/js/app.js'])
 </body>

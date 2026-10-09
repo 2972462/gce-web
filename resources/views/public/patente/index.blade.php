@@ -16,17 +16,6 @@
                 @enderror
             </div>
 
-            <div>
-                @if (config('services.recaptcha.site_key'))
-                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                @else
-                    <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía (modo desarrollo).</p>
-                @endif
-                @error('g-recaptcha-response')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-
             <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
                 Calcular
             </button>
@@ -59,10 +48,4 @@
             </div>
         @endif
     </div>
-
-    @if (config('services.recaptcha.site_key'))
-        @push('scripts')
-            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-        @endpush
-    @endif
 </x-layouts.public>

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\PatenteComercialTramo;
-use App\Rules\Recaptcha;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -20,7 +19,6 @@ class PatenteController extends Controller
     {
         $datos = $request->validate([
             'monto' => ['required', 'numeric', 'min:0'],
-            'g-recaptcha-response' => [new Recaptcha],
         ]);
 
         $resultado = PatenteComercialTramo::calcular((float) $datos['monto']);

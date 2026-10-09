@@ -3,33 +3,28 @@
         <h1 class="text-2xl font-semibold text-gray-900">Consulta de RUC</h1>
         <p class="mt-2 text-gray-600">Ingresa un número de RUC para verificar la razón social asociada.</p>
 
-        <form method="POST" action="{{ route('publico.ruc.buscar') }}" class="mt-6 space-y-4">
+        <form id="ruc-form" method="POST" action="{{ route('publico.ruc.buscar') }}" class="mt-6">
             @csrf
+            <input type="hidden" name="recaptcha_token" id="recaptcha_token">
 
-            <div>
-                <label for="ruc" class="block text-sm font-medium text-gray-700">Número de RUC</label>
+            <div class="relative flex items-center bg-gray-50 border border-gray-300 rounded-full shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 overflow-hidden">
+                <svg class="w-5 h-5 ml-4 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3-3"/></svg>
                 <input id="ruc" name="ruc" type="text" inputmode="numeric" value="{{ old('ruc', $buscado ?? '') }}"
-                       placeholder="80012345"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                @error('ruc')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                       placeholder="Buscar por número de RUC..."
+                       class="flex-1 border-0 bg-transparent focus:ring-0 text-sm py-3 px-3">
+                <button type="submit" class="m-1 px-5 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-full hover:bg-indigo-700 transition">
+                    Buscar
+                </button>
             </div>
-
-            <div>
-                @if (config('services.recaptcha.site_key'))
-                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                @else
-                    <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía (modo desarrollo).</p>
-                @endif
-                @error('g-recaptcha-response')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                Consultar
-            </button>
+            @error('ruc')
+                <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+            @error('recaptcha_token')
+                <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+            @unless (config('services.recaptcha.site_key'))
+                <p class="mt-1.5 text-xs text-amber-600">reCAPTCHA sin configurar todavía (modo desarrollo).</p>
+            @endunless
         </form>
 
         @if (session()->exists('resultado'))
@@ -58,7 +53,19 @@
 
     @if (config('services.recaptcha.site_key'))
         @push('scripts')
-            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+            <script>
+                document.getElementById('ruc-form').addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const form = this;
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', { action: 'consulta_ruc' }).then(function (token) {
+                            document.getElementById('recaptcha_token').value = token;
+                            form.submit();
+                        });
+                    });
+                });
+            </script>
         @endpush
     @endif
 </x-layouts.public>

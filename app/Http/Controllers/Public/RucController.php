@@ -22,7 +22,7 @@ class RucController extends Controller
     {
         $datos = $request->validate([
             'ruc' => ['required', 'string', 'regex:/^[0-9][0-9.\-]{0,17}[0-9]$/'],
-            'g-recaptcha-response' => [new Recaptcha],
+            'recaptcha_token' => [new Recaptcha],
         ], [
             'ruc.regex' => 'Ingresa un numero de RUC valido.',
         ]);
