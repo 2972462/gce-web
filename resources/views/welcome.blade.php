@@ -66,13 +66,13 @@
 </header>
 
 <!-- HERO -->
-<section id="inicio" class="relative bg-slate-900 pt-40 pb-28 px-6 overflow-hidden">
+<section id="inicio" class="relative bg-slate-900 pt-24 pb-6 px-6 overflow-hidden">
     <div class="absolute inset-0 bg-grid opacity-40"></div>
     <div class="absolute -top-32 -right-32 w-[32rem] h-[32rem] bg-amber-500/10 rounded-full blur-3xl"></div>
     <div class="absolute -bottom-32 -left-32 w-[32rem] h-[32rem] bg-sky-500/10 rounded-full blur-3xl"></div>
 
     <div class="relative max-w-5xl mx-auto text-center">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase mb-8">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase mb-6">
             <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
             Proveedor del Estado Paraguayo
         </div>
@@ -82,30 +82,30 @@
             <br class="hidden sm:block"> para empresas e instituciones
         </h1>
 
-        <p class="text-balance mt-6 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        <p class="text-balance mt-5 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
             Integramos tecnología, distribución y desarrollo de software para impulsar la eficiencia de organizaciones públicas y privadas en Paraguay.
         </p>
 
-        <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a href="#servicios" class="px-7 py-3.5 rounded-xl bg-amber-500 text-slate-900 font-semibold text-sm hover:bg-amber-400 transition shadow-lg shadow-amber-500/20">
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-4">
+            <a href="#servicios" class="px-6 py-3 rounded-xl bg-amber-500 text-slate-900 font-semibold text-sm hover:bg-amber-400 transition shadow-lg shadow-amber-500/20">
                 Ver nuestros servicios
             </a>
-            <a href="#contacto" class="px-7 py-3.5 rounded-xl border border-slate-700 text-white font-semibold text-sm hover:border-amber-400 hover:text-amber-400 transition">
+            <a href="#contacto" class="px-6 py-3 rounded-xl border border-slate-700 text-white font-semibold text-sm hover:border-amber-400 hover:text-amber-400 transition">
                 Solicitar cotización
             </a>
         </div>
 
-        <div class="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto pt-10 border-t border-slate-800">
+        <div class="mt-6 grid grid-cols-3 gap-8 max-w-lg mx-auto pt-4 border-t border-slate-800">
             <div>
-                <div class="text-3xl font-extrabold text-amber-400">3+</div>
+                <div class="text-2xl font-extrabold text-amber-400">3+</div>
                 <div class="text-xs text-slate-500 uppercase tracking-wide mt-1">Rubros de servicio</div>
             </div>
             <div>
-                <div class="text-3xl font-extrabold text-amber-400">DNCP</div>
+                <div class="text-2xl font-extrabold text-amber-400">DNCP</div>
                 <div class="text-xs text-slate-500 uppercase tracking-wide mt-1">Proveedor registrado</div>
             </div>
             <div>
-                <div class="text-3xl font-extrabold text-amber-400">CDE</div>
+                <div class="text-2xl font-extrabold text-amber-400">CDE</div>
                 <div class="text-xs text-slate-500 uppercase tracking-wide mt-1">Alto Paraná, Paraguay</div>
             </div>
         </div>
@@ -113,9 +113,9 @@
 </section>
 
 <!-- HERRAMIENTAS: PATENTE + RUC -->
-<section id="calculadora" class="py-16 px-6 bg-gradient-to-b from-slate-50 to-white">
+<section id="calculadora" class="pt-6 pb-16 px-6 bg-gradient-to-b from-slate-50 to-white">
     <div class="max-w-5xl mx-auto">
-        <div class="max-w-2xl mx-auto text-center mb-8">
+        <div class="max-w-2xl mx-auto text-center mb-6">
             <div class="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-sky-600 uppercase mb-3">
                 <span class="w-7 h-0.5 bg-amber-500"></span> Herramientas gratuitas <span class="w-7 h-0.5 bg-amber-500"></span>
             </div>
