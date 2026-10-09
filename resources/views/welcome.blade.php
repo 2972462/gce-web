@@ -112,109 +112,6 @@
     </div>
 </section>
 
-<!-- TRUST STRIP -->
-<div class="bg-slate-800 py-4 px-6 overflow-hidden border-b border-slate-700">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-x-10 gap-y-2 text-xs font-semibold text-slate-400 tracking-wide">
-        <span>Sistemas CCTV y Videovigilancia</span>
-        <span class="w-1 h-1 rounded-full bg-amber-500"></span>
-        <span>Desarrollo de Software a Medida</span>
-        <span class="w-1 h-1 rounded-full bg-amber-500"></span>
-        <span>Insumos y Equipos para Oficina</span>
-        <span class="w-1 h-1 rounded-full bg-amber-500"></span>
-        <span>Proveedor habilitado DNCP</span>
-    </div>
-</div>
-
-<!-- NOSOTROS -->
-<section id="nosotros" class="py-28 px-6 bg-slate-50">
-    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div>
-            <div class="flex items-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
-                <span class="w-7 h-0.5 bg-amber-500"></span> Quiénes somos
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight text-balance">
-                Compromiso con la tecnología y el desarrollo empresarial
-            </h2>
-            <p class="mt-6 text-slate-600 leading-relaxed">
-                GCE — Grupo Comercial Empresarial es una empresa paraguaya con base en Ciudad del Este, especializada en la provisión de soluciones tecnológicas, desarrollo de software y suministros para instituciones públicas y privadas.
-            </p>
-            <p class="mt-4 text-slate-600 leading-relaxed">
-                Nos distinguimos por nuestra capacidad de participar activamente en procesos de contratación pública, cumpliendo con todos los requisitos del sistema de la Dirección Nacional de Contrataciones Públicas (DNCP) de Paraguay.
-            </p>
-        </div>
-
-        <div class="bg-slate-900 rounded-3xl p-10 relative overflow-hidden">
-            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-sky-500"></div>
-            <div class="text-xs font-bold tracking-widest text-amber-400 uppercase mb-6">Nuestros valores</div>
-            <div class="grid grid-cols-2 gap-4">
-                @foreach ([
-                    ['icon' => '🎯', 'title' => 'Precisión', 'text' => 'Soluciones adaptadas a cada necesidad específica'],
-                    ['icon' => '🤝', 'title' => 'Confianza', 'text' => 'Transparencia en cada proceso y contratación'],
-                    ['icon' => '⚡', 'title' => 'Agilidad', 'text' => 'Respuesta rápida y entrega en tiempo y forma'],
-                    ['icon' => '📈', 'title' => 'Crecimiento', 'text' => 'Acompañamos la evolución de nuestros clientes'],
-                ] as $valor)
-                    <div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-amber-500/30 transition">
-                        <div class="text-xl mb-2">{{ $valor['icon'] }}</div>
-                        <div class="font-bold text-white text-sm mb-1">{{ $valor['title'] }}</div>
-                        <div class="text-xs text-slate-400 leading-relaxed">{{ $valor['text'] }}</div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- SERVICIOS -->
-<section id="servicios" class="py-28 px-6 bg-white">
-    <div class="max-w-7xl mx-auto">
-        <div class="flex flex-wrap items-end justify-between gap-6 mb-16">
-            <div>
-                <div class="flex items-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
-                    <span class="w-7 h-0.5 bg-amber-500"></span> Nuestros servicios
-                </div>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Lo que ofrecemos</h2>
-            </div>
-            <p class="text-slate-600 max-w-sm">Soluciones integrales para instituciones públicas, municipios, empresas y comercios del Paraguay.</p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-            @foreach ([
-                [
-                    'icon' => '🎥', 'title' => 'Sistemas CCTV y Videovigilancia',
-                    'text' => 'Diseño, suministro e instalación de sistemas de vigilancia y seguridad electrónica.',
-                    'features' => ['Cámaras IP y analógicas HD/4K', 'NVR/DVR y almacenamiento en nube', 'Monitoreo remoto 24/7', 'Control de acceso biométrico'],
-                ],
-                [
-                    'icon' => '💻', 'title' => 'Desarrollo de Software a Medida',
-                    'text' => 'Sistemas de gestión, aplicaciones web y soluciones informáticas a medida.',
-                    'features' => ['Sistemas de gestión municipal', 'Aplicaciones web y móvil', 'Integración con SIFEN / e-Kuatia', 'Soporte técnico especializado'],
-                ],
-                [
-                    'icon' => '🖨️', 'title' => 'Insumos y Equipos para Oficina',
-                    'text' => 'Provisión de insumos, consumibles y equipamiento de oficina.',
-                    'features' => ['Cartuchos, tóners y consumibles', 'Impresoras y equipos multifunción', 'Equipos de cómputo y periféricos', 'Entrega con factura electrónica'],
-                ],
-            ] as $servicio)
-                <div class="group rounded-2xl border border-slate-200 p-8 hover:border-slate-900 hover:shadow-xl hover:shadow-slate-900/5 transition">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
-                        {{ $servicio['icon'] }}
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-3">{{ $servicio['title'] }}</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed mb-5">{{ $servicio['text'] }}</p>
-                    <ul class="space-y-2">
-                        @foreach ($servicio['features'] as $feature)
-                            <li class="flex items-center gap-2 text-sm text-slate-700">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
-                                {{ $feature }}
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
 <!-- HERRAMIENTAS: PATENTE + RUC -->
 <section id="calculadora" class="py-16 px-6 bg-gradient-to-b from-slate-50 to-white">
     <div class="max-w-5xl mx-auto">
@@ -347,6 +244,110 @@
         </div>
     </div>
 </section>
+
+<!-- TRUST STRIP -->
+<div class="bg-slate-800 py-4 px-6 overflow-hidden border-b border-slate-700">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-x-10 gap-y-2 text-xs font-semibold text-slate-400 tracking-wide">
+        <span>Sistemas CCTV y Videovigilancia</span>
+        <span class="w-1 h-1 rounded-full bg-amber-500"></span>
+        <span>Desarrollo de Software a Medida</span>
+        <span class="w-1 h-1 rounded-full bg-amber-500"></span>
+        <span>Insumos y Equipos para Oficina</span>
+        <span class="w-1 h-1 rounded-full bg-amber-500"></span>
+        <span>Proveedor habilitado DNCP</span>
+    </div>
+</div>
+
+<!-- NOSOTROS -->
+<section id="nosotros" class="py-28 px-6 bg-slate-50">
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+            <div class="flex items-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
+                <span class="w-7 h-0.5 bg-amber-500"></span> Quiénes somos
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight text-balance">
+                Compromiso con la tecnología y el desarrollo empresarial
+            </h2>
+            <p class="mt-6 text-slate-600 leading-relaxed">
+                GCE — Grupo Comercial Empresarial es una empresa paraguaya con base en Ciudad del Este, especializada en la provisión de soluciones tecnológicas, desarrollo de software y suministros para instituciones públicas y privadas.
+            </p>
+            <p class="mt-4 text-slate-600 leading-relaxed">
+                Nos distinguimos por nuestra capacidad de participar activamente en procesos de contratación pública, cumpliendo con todos los requisitos del sistema de la Dirección Nacional de Contrataciones Públicas (DNCP) de Paraguay.
+            </p>
+        </div>
+
+        <div class="bg-slate-900 rounded-3xl p-10 relative overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-sky-500"></div>
+            <div class="text-xs font-bold tracking-widest text-amber-400 uppercase mb-6">Nuestros valores</div>
+            <div class="grid grid-cols-2 gap-4">
+                @foreach ([
+                    ['icon' => '🎯', 'title' => 'Precisión', 'text' => 'Soluciones adaptadas a cada necesidad específica'],
+                    ['icon' => '🤝', 'title' => 'Confianza', 'text' => 'Transparencia en cada proceso y contratación'],
+                    ['icon' => '⚡', 'title' => 'Agilidad', 'text' => 'Respuesta rápida y entrega en tiempo y forma'],
+                    ['icon' => '📈', 'title' => 'Crecimiento', 'text' => 'Acompañamos la evolución de nuestros clientes'],
+                ] as $valor)
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-amber-500/30 transition">
+                        <div class="text-xl mb-2">{{ $valor['icon'] }}</div>
+                        <div class="font-bold text-white text-sm mb-1">{{ $valor['title'] }}</div>
+                        <div class="text-xs text-slate-400 leading-relaxed">{{ $valor['text'] }}</div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios" class="py-28 px-6 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-wrap items-end justify-between gap-6 mb-16">
+            <div>
+                <div class="flex items-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
+                    <span class="w-7 h-0.5 bg-amber-500"></span> Nuestros servicios
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Lo que ofrecemos</h2>
+            </div>
+            <p class="text-slate-600 max-w-sm">Soluciones integrales para instituciones públicas, municipios, empresas y comercios del Paraguay.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            @foreach ([
+                [
+                    'icon' => '🎥', 'title' => 'Sistemas CCTV y Videovigilancia',
+                    'text' => 'Diseño, suministro e instalación de sistemas de vigilancia y seguridad electrónica.',
+                    'features' => ['Cámaras IP y analógicas HD/4K', 'NVR/DVR y almacenamiento en nube', 'Monitoreo remoto 24/7', 'Control de acceso biométrico'],
+                ],
+                [
+                    'icon' => '💻', 'title' => 'Desarrollo de Software a Medida',
+                    'text' => 'Sistemas de gestión, aplicaciones web y soluciones informáticas a medida.',
+                    'features' => ['Sistemas de gestión municipal', 'Aplicaciones web y móvil', 'Integración con SIFEN / e-Kuatia', 'Soporte técnico especializado'],
+                ],
+                [
+                    'icon' => '🖨️', 'title' => 'Insumos y Equipos para Oficina',
+                    'text' => 'Provisión de insumos, consumibles y equipamiento de oficina.',
+                    'features' => ['Cartuchos, tóners y consumibles', 'Impresoras y equipos multifunción', 'Equipos de cómputo y periféricos', 'Entrega con factura electrónica'],
+                ],
+            ] as $servicio)
+                <div class="group rounded-2xl border border-slate-200 p-8 hover:border-slate-900 hover:shadow-xl hover:shadow-slate-900/5 transition">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
+                        {{ $servicio['icon'] }}
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-3">{{ $servicio['title'] }}</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-5">{{ $servicio['text'] }}</p>
+                    <ul class="space-y-2">
+                        @foreach ($servicio['features'] as $feature)
+                            <li class="flex items-center gap-2 text-sm text-slate-700">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+                                {{ $feature }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
 
 <!-- LICITACIONES -->
 <section id="licitaciones" class="py-28 px-6 bg-slate-900 relative overflow-hidden">
