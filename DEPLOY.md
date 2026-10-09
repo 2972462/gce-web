@@ -63,15 +63,32 @@ En GitHub (`github.com/2972462/gce-web/settings/hooks` → *Add webhook*):
 
 ## 4. Base auxiliar de RUC (solo lectura)
 
-Pedir que se corra en el servidor de la base "auxiliar" (compartida con
-el ERP):
+La base "auxiliar" vive en el servidor del ERP (`stock-gce`,
+`143.110.227.152`), **no** en el servidor de gce-web. Se conecta por red
+desde gce-web (`mail`, `64.23.176.222`).
+
+En `stock-gce`, como root de MySQL (`sudo mysql`):
 
 ```sql
-CREATE USER 'gce_web_ro'@'%' IDENTIFIED BY 'CAMBIAR_POR_UNA_CLAVE_FUERTE';
-GRANT SELECT, EXECUTE ON auxiliar.* TO 'gce_web_ro'@'%';
+CREATE USER 'gce_web_ro'@'64.23.176.222' IDENTIFIED BY 'CAMBIAR_POR_UNA_CLAVE_FUERTE';
+GRANT SELECT, EXECUTE ON auxiliar.* TO 'gce_web_ro'@'64.23.176.222';
 FLUSH PRIVILEGES;
 ```
 
-Idealmente reemplazar `'%'` por la IP real del servidor donde corre
-gce-web, no dejarlo abierto a cualquier host. Completar `AUX_DB_*` en el
-`.env` con esas credenciales.
+MySQL en `stock-gce` estaba restringido a `127.0.0.1` por
+`/etc/mysql/mysql.conf.d/99-bind-localhost.cnf`. Para aceptar la conexion
+remota de gce-web, ese archivo se cambio a `bind-address = 0.0.0.0` (hay
+que reiniciar MySQL: `sudo systemctl restart mysql`), y se agrego una
+regla de `ufw` para no exponer el puerto a cualquiera:
+
+```
+sudo ufw allow from 64.23.176.222 to any port 3306 proto tcp comment 'MySQL auxiliar - solo gce-web'
+```
+
+El usuario de MySQL solo puede conectarse desde esa IP y solo tiene
+SELECT/EXECUTE sobre `auxiliar`, asi que aunque el puerto 3306 ya no es
+puramente local, el acceso real queda acotado a gce-web en modo lectura.
+
+Completar en gce-web `AUX_DB_HOST=143.110.227.152` y `AUX_DB_USERNAME`/
+`AUX_DB_PASSWORD` con esas credenciales, despues `php artisan config:clear`
+(o `config:cache` de nuevo si se habia cacheado).
