@@ -26,6 +26,8 @@ function initSortables() {
         Sortable.create(contenedor, {
             handle: '.drag-handle',
             animation: 150,
+            forceFallback: true,
+            fallbackTolerance: 3,
             onEnd() {
                 const ids = Array.from(contenedor.children).map((el) => el.dataset.id);
                 enviarOrden(contenedor.dataset.sortable, ids);
@@ -34,4 +36,4 @@ function initSortables() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', initSortables);
+initSortables();
