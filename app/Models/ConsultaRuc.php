@@ -11,6 +11,7 @@ class ConsultaRuc extends Model
     protected $fillable = [
         'ruc_buscado',
         'encontrado',
+        'resultados_count',
         'razon_social',
         'estado',
         'ip',

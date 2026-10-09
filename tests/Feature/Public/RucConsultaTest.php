@@ -18,15 +18,15 @@ class RucConsultaTest extends TestCase
             ->assertSee('Consulta de RUC');
     }
 
-    public function test_requiere_el_numero_de_ruc(): void
+    public function test_requiere_la_consulta(): void
     {
         $this->from(route('publico.ruc.index'))
             ->post(route('publico.ruc.buscar'), [
-                'ruc' => '',
+                'consulta' => '',
                 'recaptcha_token' => 'token-de-prueba',
             ])
             ->assertRedirect(route('publico.ruc.index'))
-            ->assertSessionHasErrors('ruc');
+            ->assertSessionHasErrors('consulta');
     }
 
     public function test_sin_secret_key_configurada_el_recaptcha_se_omite(): void
@@ -36,11 +36,11 @@ class RucConsultaTest extends TestCase
         $this->mock(RucBuscador::class)
             ->shouldReceive('buscar')
             ->once()
-            ->andReturn(null);
+            ->andReturn([]);
 
         $this->from(route('publico.ruc.index'))
             ->post(route('publico.ruc.buscar'), [
-                'ruc' => '80012345',
+                'consulta' => '80012345',
                 'recaptcha_token' => 'cualquier-cosa',
             ])
             ->assertRedirect(route('publico.ruc.index'))
@@ -59,7 +59,7 @@ class RucConsultaTest extends TestCase
 
         $this->from(route('publico.ruc.index'))
             ->post(route('publico.ruc.buscar'), [
-                'ruc' => '80012345',
+                'consulta' => '80012345',
                 'recaptcha_token' => 'token-invalido',
             ])
             ->assertRedirect(route('publico.ruc.index'))
@@ -78,14 +78,14 @@ class RucConsultaTest extends TestCase
 
         $this->from(route('publico.ruc.index'))
             ->post(route('publico.ruc.buscar'), [
-                'ruc' => '80012345',
+                'consulta' => '80012345',
                 'recaptcha_token' => 'token-de-bot',
             ])
             ->assertRedirect(route('publico.ruc.index'))
             ->assertSessionHasErrors('recaptcha_token');
     }
 
-    public function test_recaptcha_valido_y_ruc_encontrado_muestra_resultado(): void
+    public function test_busqueda_por_ruc_exacto_muestra_un_resultado(): void
     {
         config(['services.recaptcha.secret_key' => 'secret-de-prueba']);
 
@@ -97,23 +97,23 @@ class RucConsultaTest extends TestCase
             ->shouldReceive('buscar')
             ->with('80012345')
             ->once()
-            ->andReturn([
+            ->andReturn([[
                 'ruc' => '80012345',
                 'digito_verificador' => '6',
                 'ruc_completo' => '80012345-6',
                 'razon_social' => 'Empresa de Prueba S.A.',
                 'estado' => 'ACTIVO',
-            ]);
+            ]]);
 
         $response = $this->from(route('publico.ruc.index'))
             ->post(route('publico.ruc.buscar'), [
-                'ruc' => '80012345',
+                'consulta' => '80012345',
                 'recaptcha_token' => 'token-valido',
             ]);
 
         $response->assertRedirect(route('publico.ruc.index'));
         $response->assertSessionHasNoErrors();
-        $response->assertSessionHas('resultado.razon_social', 'Empresa de Prueba S.A.');
+        $response->assertSessionHas('resultados.0.razon_social', 'Empresa de Prueba S.A.');
 
         $this->get(route('publico.ruc.index'))
             ->assertOk()
@@ -123,12 +123,52 @@ class RucConsultaTest extends TestCase
         $this->assertDatabaseHas('consultas_ruc', [
             'ruc_buscado' => '80012345',
             'encontrado' => true,
+            'resultados_count' => 1,
             'razon_social' => 'Empresa de Prueba S.A.',
             'recaptcha_score' => 0.9,
         ]);
     }
 
-    public function test_ruc_no_encontrado_muestra_mensaje(): void
+    public function test_busqueda_por_nombre_muestra_varias_coincidencias(): void
+    {
+        config(['services.recaptcha.secret_key' => 'secret-de-prueba']);
+
+        Http::fake([
+            'https://www.google.com/recaptcha/api/siteverify' => Http::response(['success' => true, 'score' => 0.9]),
+        ]);
+
+        $this->mock(RucBuscador::class)
+            ->shouldReceive('buscar')
+            ->with('Empresa')
+            ->once()
+            ->andReturn([
+                ['ruc' => '1', 'digito_verificador' => '1', 'ruc_completo' => '1-1', 'razon_social' => 'Empresa Uno S.A.', 'estado' => 'ACTIVO'],
+                ['ruc' => '2', 'digito_verificador' => '2', 'ruc_completo' => '2-2', 'razon_social' => 'Empresa Dos S.R.L.', 'estado' => 'ACTIVO'],
+            ]);
+
+        $response = $this->from(route('publico.ruc.index'))
+            ->post(route('publico.ruc.buscar'), [
+                'consulta' => 'Empresa',
+                'recaptcha_token' => 'token-valido',
+            ]);
+
+        $response->assertSessionHasNoErrors();
+
+        $this->get(route('publico.ruc.index'))
+            ->assertOk()
+            ->assertSee('2 coincidencias')
+            ->assertSee('Empresa Uno S.A.')
+            ->assertSee('Empresa Dos S.R.L.');
+
+        $this->assertDatabaseHas('consultas_ruc', [
+            'ruc_buscado' => 'Empresa',
+            'encontrado' => true,
+            'resultados_count' => 2,
+            'razon_social' => null,
+        ]);
+    }
+
+    public function test_sin_resultados_muestra_mensaje(): void
     {
         config(['services.recaptcha.secret_key' => 'secret-de-prueba']);
 
@@ -139,17 +179,17 @@ class RucConsultaTest extends TestCase
         $this->mock(RucBuscador::class)
             ->shouldReceive('buscar')
             ->once()
-            ->andReturn(null);
+            ->andReturn([]);
 
         $this->from(route('publico.ruc.index'))
             ->post(route('publico.ruc.buscar'), [
-                'ruc' => '99999999',
+                'consulta' => '99999999',
                 'recaptcha_token' => 'token-valido',
             ])
             ->assertRedirect(route('publico.ruc.index'));
 
         $this->get(route('publico.ruc.index'))
             ->assertOk()
-            ->assertSee('No se encontró ningún RUC');
+            ->assertSee('No se encontraron resultados');
     }
 }

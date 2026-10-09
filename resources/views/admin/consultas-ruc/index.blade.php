@@ -12,7 +12,7 @@
                     <thead class="bg-gray-50 dark:bg-gray-900/40 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         <tr>
                             <th class="px-4 py-2 text-left">Fecha</th>
-                            <th class="px-4 py-2 text-left">RUC buscado</th>
+                            <th class="px-4 py-2 text-left">Búsqueda</th>
                             <th class="px-4 py-2 text-left">Resultado</th>
                             <th class="px-4 py-2 text-left">IP</th>
                             <th class="px-4 py-2 text-left">Dispositivo</th>
@@ -25,9 +25,11 @@
                                 <td class="px-4 py-2 whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $consulta->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="px-4 py-2 font-medium text-gray-900 dark:text-gray-100">{{ $consulta->ruc_buscado }}</td>
                                 <td class="px-4 py-2">
-                                    @if ($consulta->encontrado)
+                                    @if ($consulta->resultados_count === 1)
                                         <span class="text-green-700 dark:text-green-400">{{ $consulta->razon_social }}</span>
                                         <span class="text-gray-400">({{ $consulta->estado ?? '—' }})</span>
+                                    @elseif ($consulta->resultados_count > 1)
+                                        <span class="text-amber-700 dark:text-amber-400">{{ $consulta->resultados_count }} coincidencias</span>
                                     @else
                                         <span class="text-gray-400">No encontrado</span>
                                     @endif

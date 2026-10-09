@@ -240,14 +240,14 @@
 
                     <div class="relative flex items-center bg-slate-50 border border-slate-300 rounded-full shadow-sm focus-within:border-sky-500 focus-within:ring-1 focus-within:ring-sky-500 overflow-hidden">
                         <svg class="w-4 h-4 ml-3.5 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3-3"/></svg>
-                        <input id="ruc" name="ruc" type="text" inputmode="numeric" value="{{ old('ruc', session('buscado') ?? '') }}"
-                               placeholder="Número de RUC"
+                        <input id="consulta" name="consulta" type="text" value="{{ old('consulta', session('buscado') ?? '') }}"
+                               placeholder="RUC o nombre/razón social"
                                class="flex-1 min-w-0 border-0 bg-transparent focus:ring-0 text-sm py-2.5 px-2.5">
                         <button type="submit" class="m-1 px-4 py-2 bg-sky-600 text-white text-sm font-semibold rounded-full hover:bg-sky-700 transition shrink-0">
                             Buscar
                         </button>
                     </div>
-                    @error('ruc')
+                    @error('consulta')
                         <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                     @error('recaptcha_token')
@@ -260,15 +260,26 @@
 
                 @if (session('buscado'))
                     <div class="mt-6 pt-5 border-t border-slate-200">
-                        @if ($resultadoRuc = session('resultado'))
+                        @php $resultadosRuc = session('resultados', []); @endphp
+                        @if (count($resultadosRuc) === 1)
                             <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Nombre / Razón social</div>
-                            <div class="text-base font-extrabold text-slate-900 mb-4">{{ \App\Services\RucBuscador::nombreLegible($resultadoRuc['razon_social']) }}</div>
+                            <div class="text-base font-extrabold text-slate-900 mb-4">{{ \App\Services\RucBuscador::nombreLegible($resultadosRuc[0]['razon_social']) }}</div>
                             <div class="bg-slate-50 rounded-xl p-4 text-sm">
                                 <div class="text-xs text-slate-500 mb-1">RUC</div>
-                                <div class="font-bold text-slate-900">{{ $resultadoRuc['ruc_completo'] }}</div>
+                                <div class="font-bold text-slate-900">{{ $resultadosRuc[0]['ruc_completo'] }}</div>
                             </div>
+                        @elseif (count($resultadosRuc) > 1)
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ count($resultadosRuc) }} coincidencias</div>
+                            <ul class="space-y-2 max-h-72 overflow-y-auto">
+                                @foreach ($resultadosRuc as $fila)
+                                    <li class="bg-slate-50 rounded-xl p-3 text-sm">
+                                        <div class="font-bold text-slate-900">{{ \App\Services\RucBuscador::nombreLegible($fila['razon_social']) }}</div>
+                                        <div class="text-xs text-slate-500">RUC {{ $fila['ruc_completo'] }}</div>
+                                    </li>
+                                @endforeach
+                            </ul>
                         @else
-                            <p class="text-sm text-slate-600">No se encontró ningún RUC con el número <strong>{{ session('buscado') }}</strong>.</p>
+                            <p class="text-sm text-slate-600">No se encontraron resultados para <strong>{{ session('buscado') }}</strong>.</p>
                         @endif
                     </div>
                 @endif

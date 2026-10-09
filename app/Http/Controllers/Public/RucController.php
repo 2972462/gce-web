@@ -24,35 +24,37 @@ class RucController extends Controller
         $recaptcha = new Recaptcha;
 
         $datos = $request->validate([
-            'ruc' => ['required', 'string', 'regex:/^[0-9][0-9.\-]{0,17}[0-9]$/'],
+            'consulta' => ['required', 'string', 'min:3', 'max:255'],
             'recaptcha_token' => [$recaptcha],
         ], [
-            'ruc.regex' => 'Ingresa un numero de RUC valido.',
+            'consulta.required' => 'Ingresa un RUC o un nombre para buscar.',
+            'consulta.min' => 'Ingresa al menos 3 caracteres.',
         ]);
 
         try {
-            $resultado = $buscador->buscar($datos['ruc']);
+            $resultados = $buscador->buscar($datos['consulta']);
         } catch (QueryException $e) {
             Log::error('Error consultando la base auxiliar de RUC: '.$e->getMessage());
 
             return back()->withInput()->withErrors([
-                'ruc' => 'El servicio de consulta no esta disponible en este momento. Intenta mas tarde.',
+                'consulta' => 'El servicio de consulta no esta disponible en este momento. Intenta mas tarde.',
             ]);
         }
 
         ConsultaRuc::create([
-            'ruc_buscado' => $datos['ruc'],
-            'encontrado' => $resultado !== null,
-            'razon_social' => $resultado['razon_social'] ?? null,
-            'estado' => $resultado['estado'] ?? null,
+            'ruc_buscado' => $datos['consulta'],
+            'encontrado' => count($resultados) > 0,
+            'resultados_count' => count($resultados),
+            'razon_social' => count($resultados) === 1 ? $resultados[0]['razon_social'] : null,
+            'estado' => count($resultados) === 1 ? $resultados[0]['estado'] : null,
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'recaptcha_score' => $recaptcha->score,
         ]);
 
         return back()->withInput()->with([
-            'resultado' => $resultado,
-            'buscado' => $datos['ruc'],
+            'resultados' => $resultados,
+            'buscado' => $datos['consulta'],
         ]);
     }
 }

@@ -6,21 +6,45 @@ use Illuminate\Support\Facades\DB;
 
 class RucBuscador
 {
-    public function buscar(string $ruc): ?array
+    /**
+     * Busca por RUC (solo numeros/puntos/guiones) o por nombre/razon
+     * social (si el texto tiene letras). Siempre devuelve una lista:
+     * 0 filas si no hay coincidencias, 1 en una busqueda exacta por RUC,
+     * hasta 200 en una busqueda por nombre.
+     */
+    public function buscar(string $texto): array
     {
-        $ruc = preg_replace('/\D/', '', $ruc);
+        $soloNumeros = preg_replace('/[.\-\s]/', '', $texto);
 
-        if ($ruc === '') {
-            return null;
+        if ($soloNumeros !== '' && ctype_digit($soloNumeros)) {
+            return $this->buscarPorRuc($soloNumeros);
         }
 
+        return $this->buscarPorRazonSocial($texto);
+    }
+
+    private function buscarPorRuc(string $ruc): array
+    {
         $filas = DB::connection('auxiliar')->select('CALL fn_ruc(?)', [$ruc]);
-        $fila = $filas[0] ?? null;
 
-        if (! $fila) {
-            return null;
+        return array_map([$this, 'mapearFila'], $filas);
+    }
+
+    private function buscarPorRazonSocial(string $texto): array
+    {
+        $texto = trim($texto);
+
+        if ($texto === '') {
+            return [];
         }
 
+        $filas = DB::connection('auxiliar')->select('CALL fn_razon_social(?)', [$texto]);
+
+        return array_map([$this, 'mapearFila'], $filas);
+    }
+
+    private function mapearFila(object $fila): array
+    {
         return [
             'ruc' => $fila->ruc,
             'digito_verificador' => $fila->digito_verificador,
