@@ -31,4 +31,21 @@ class RucBuscador
             'estado' => $fila->estado,
         ];
     }
+
+    /**
+     * Las personas fisicas vienen de la base como "APELLIDO/S, NOMBRE/S"
+     * (formato de registro oficial); las personas juridicas no tienen
+     * coma, son solo el nombre de la empresa tal cual. Para mostrar algo
+     * mas natural de leer, se invierte solo cuando hay coma.
+     */
+    public static function nombreLegible(string $razonSocial): string
+    {
+        if (! str_contains($razonSocial, ',')) {
+            return $razonSocial;
+        }
+
+        [$apellido, $nombre] = array_map('trim', explode(',', $razonSocial, 2));
+
+        return trim("{$nombre} {$apellido}");
+    }
 }

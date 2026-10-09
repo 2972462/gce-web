@@ -35,13 +35,9 @@
                             <dt class="text-gray-500">RUC</dt>
                             <dd class="font-medium text-gray-900">{{ $resultado['ruc_completo'] }}</dd>
                         </div>
-                        <div>
-                            <dt class="text-gray-500">Estado</dt>
-                            <dd class="font-medium text-gray-900">{{ $resultado['estado'] ?? '—' }}</dd>
-                        </div>
                         <div class="sm:col-span-2">
-                            <dt class="text-gray-500">Razón social</dt>
-                            <dd class="font-medium text-gray-900">{{ $resultado['razon_social'] }}</dd>
+                            <dt class="text-gray-500">Nombre / Razón social</dt>
+                            <dd class="font-medium text-gray-900">{{ \App\Services\RucBuscador::nombreLegible($resultado['razon_social']) }}</dd>
                         </div>
                     </dl>
                 @else

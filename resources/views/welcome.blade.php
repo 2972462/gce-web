@@ -261,17 +261,11 @@
                 @if (session('buscado'))
                     <div class="mt-6 pt-5 border-t border-slate-200">
                         @if ($resultadoRuc = session('resultado'))
-                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Razón social</div>
-                            <div class="text-base font-extrabold text-slate-900 mb-4">{{ $resultadoRuc['razon_social'] }}</div>
-                            <div class="grid grid-cols-2 gap-4 text-sm">
-                                <div class="bg-slate-50 rounded-xl p-4">
-                                    <div class="text-xs text-slate-500 mb-1">RUC</div>
-                                    <div class="font-bold text-slate-900">{{ $resultadoRuc['ruc_completo'] }}</div>
-                                </div>
-                                <div class="bg-slate-50 rounded-xl p-4">
-                                    <div class="text-xs text-slate-500 mb-1">Estado</div>
-                                    <div class="font-bold text-slate-900">{{ $resultadoRuc['estado'] ?? '—' }}</div>
-                                </div>
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Nombre / Razón social</div>
+                            <div class="text-base font-extrabold text-slate-900 mb-4">{{ \App\Services\RucBuscador::nombreLegible($resultadoRuc['razon_social']) }}</div>
+                            <div class="bg-slate-50 rounded-xl p-4 text-sm">
+                                <div class="text-xs text-slate-500 mb-1">RUC</div>
+                                <div class="font-bold text-slate-900">{{ $resultadoRuc['ruc_completo'] }}</div>
                             </div>
                         @else
                             <p class="text-sm text-slate-600">No se encontró ningún RUC con el número <strong>{{ session('buscado') }}</strong>.</p>
