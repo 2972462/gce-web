@@ -42,7 +42,7 @@
         <div class="hidden md:flex items-center gap-8">
             <a href="#nosotros" class="text-sm font-medium text-slate-300 hover:text-white transition">Nosotros</a>
             <a href="#servicios" class="text-sm font-medium text-slate-300 hover:text-white transition">Servicios</a>
-            <a href="#calculadora" class="text-sm font-medium text-slate-300 hover:text-white transition">Calculadora</a>
+            <a href="#calculadora" class="text-sm font-medium text-slate-300 hover:text-white transition">Herramientas</a>
             <a href="#licitaciones" class="text-sm font-medium text-slate-300 hover:text-white transition">Licitaciones</a>
             <a href="#contacto" class="inline-flex items-center px-4 py-2 rounded-lg bg-amber-500 text-slate-900 text-sm font-semibold hover:bg-amber-400 transition">Contacto</a>
             @if ($siteSetting->logoDerechoUrl())
@@ -59,7 +59,7 @@
     <div x-show="open" x-transition style="display:none" class="md:hidden bg-slate-900 border-t border-slate-800 px-6 py-4 space-y-3">
         <a href="#nosotros" @click="open=false" class="block text-slate-300 font-medium">Nosotros</a>
         <a href="#servicios" @click="open=false" class="block text-slate-300 font-medium">Servicios</a>
-        <a href="#calculadora" @click="open=false" class="block text-slate-300 font-medium">Calculadora</a>
+        <a href="#calculadora" @click="open=false" class="block text-slate-300 font-medium">Herramientas</a>
         <a href="#licitaciones" @click="open=false" class="block text-slate-300 font-medium">Licitaciones</a>
         <a href="#contacto" @click="open=false" class="block text-amber-400 font-semibold">Contacto</a>
     </div>
@@ -77,12 +77,12 @@
             Proveedor del Estado Paraguayo
         </div>
 
-        <h1 class="text-balance text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.05]">
+        <h1 class="text-balance text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.1]">
             Soluciones <span class="bg-gradient-to-r from-amber-400 to-amber-200 bg-clip-text text-transparent">tecnológicas</span>
             <br class="hidden sm:block"> para empresas e instituciones
         </h1>
 
-        <p class="text-balance mt-6 text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        <p class="text-balance mt-6 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
             Integramos tecnología, distribución y desarrollo de software para impulsar la eficiencia de organizaciones públicas y privadas en Paraguay.
         </p>
 
@@ -132,7 +132,7 @@
             <div class="flex items-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
                 <span class="w-7 h-0.5 bg-amber-500"></span> Quiénes somos
             </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight text-balance">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight text-balance">
                 Compromiso con la tecnología y el desarrollo empresarial
             </h2>
             <p class="mt-6 text-slate-600 leading-relaxed">
@@ -172,7 +172,7 @@
                 <div class="flex items-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
                     <span class="w-7 h-0.5 bg-amber-500"></span> Nuestros servicios
                 </div>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Lo que ofrecemos</h2>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Lo que ofrecemos</h2>
             </div>
             <p class="text-slate-600 max-w-sm">Soluciones integrales para instituciones públicas, municipios, empresas y comercios del Paraguay.</p>
         </div>
@@ -215,87 +215,131 @@
     </div>
 </section>
 
-<!-- CALCULADORA DE PATENTE -->
-<section id="calculadora" class="py-28 px-6 bg-gradient-to-b from-slate-50 to-white">
-    <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-start">
-        <div>
-            <div class="flex items-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
-                <span class="w-7 h-0.5 bg-amber-500"></span> Herramienta gratuita
+<!-- HERRAMIENTAS: PATENTE + RUC -->
+<section id="calculadora" class="py-24 px-6 bg-gradient-to-b from-slate-50 to-white">
+    <div class="max-w-6xl mx-auto">
+        <div class="max-w-2xl mx-auto text-center mb-14">
+            <div class="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
+                <span class="w-7 h-0.5 bg-amber-500"></span> Herramientas gratuitas <span class="w-7 h-0.5 bg-amber-500"></span>
             </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight text-balance">
-                Calculá tu Patente Comercial al instante
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight text-balance">
+                Resolvé trámites al instante
             </h2>
-            <p class="mt-6 text-slate-600 leading-relaxed">
-                Ingresá el monto de tu activo declarado y obtené el impuesto de Patente Comercial correspondiente, según la escala vigente de la Ley N° 135/91, con el detalle de las dos cuotas semestrales.
+            <p class="mt-4 text-slate-600 leading-relaxed">
+                Dos herramientas públicas, sin registro: calculá tu Patente Comercial y verificá un RUC paraguayo en segundos.
             </p>
-            <ul class="mt-8 space-y-3">
-                <li class="flex items-start gap-3 text-sm text-slate-700">
-                    <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">✓</span>
-                    Cálculo oficial según la escala vigente
-                </li>
-                <li class="flex items-start gap-3 text-sm text-slate-700">
-                    <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">✓</span>
-                    Resultado inmediato, sin necesidad de registrarte
-                </li>
-                <li class="flex items-start gap-3 text-sm text-slate-700">
-                    <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">✓</span>
-                    Desglose de las dos cuotas semestrales
-                </li>
-            </ul>
         </div>
 
-        <div id="calculadora-patente" class="bg-white rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-200 p-8">
-            <h3 class="font-bold text-slate-900 mb-1">Calculadora de Patente Comercial</h3>
-            <p class="text-sm text-slate-500 mb-6">Ley N° 135/91</p>
+        <div class="grid lg:grid-cols-2 gap-8 items-start">
+            <div id="calculadora-patente" class="bg-white rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-200 p-8">
+                <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg mb-4">💰</div>
+                <h3 class="font-bold text-lg text-slate-900 mb-1">Patente Comercial</h3>
+                <p class="text-sm text-slate-500 mb-6">Cálculo según la Ley N° 135/91, con el detalle de las dos cuotas semestrales.</p>
 
-            <form method="POST" action="{{ route('publico.patente.calcular') }}" class="space-y-5">
-                @csrf
-                <div>
-                    <label for="monto" class="block text-sm font-semibold text-slate-700 mb-1.5">Monto del activo declarado (Gs.)</label>
-                    <input id="monto" name="monto" type="text" inputmode="numeric" value="{{ old('monto') }}"
-                           placeholder="15.000.000"
-                           class="block w-full rounded-xl border-slate-300 shadow-sm focus:border-amber-500 focus:ring-amber-500">
-                    @error('monto')
-                        <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    @if (config('services.recaptcha.site_key'))
-                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                    @else
-                        <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía.</p>
-                    @endif
-                    @error('g-recaptcha-response')
-                        <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <button type="submit" class="w-full px-6 py-3.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition">
-                    Calcular impuesto
-                </button>
-            </form>
-
-            @if ($resultado = session('resultado'))
-                <div class="mt-8 pt-6 border-t border-slate-200">
-                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Impuesto total</div>
-                    <div class="text-3xl font-extrabold text-slate-900 mb-5">Gs. {{ number_format($resultado['impuesto'], 0, ',', '.') }}</div>
-                    <div class="grid grid-cols-2 gap-4 text-sm">
-                        <div class="bg-slate-50 rounded-xl p-4">
-                            <div class="text-xs text-slate-500 mb-1">1ra cuota</div>
-                            <div class="font-bold text-slate-900">Gs. {{ number_format($resultado['semestre1'], 0, ',', '.') }}</div>
-                        </div>
-                        <div class="bg-slate-50 rounded-xl p-4">
-                            <div class="text-xs text-slate-500 mb-1">2da cuota</div>
-                            <div class="font-bold text-slate-900">Gs. {{ number_format($resultado['semestre2'], 0, ',', '.') }}</div>
-                        </div>
+                <form method="POST" action="{{ route('publico.patente.calcular') }}" class="space-y-5">
+                    @csrf
+                    <div>
+                        <label for="monto" class="block text-sm font-semibold text-slate-700 mb-1.5">Monto del activo declarado (Gs.)</label>
+                        <input id="monto" name="monto" type="text" inputmode="numeric" value="{{ old('monto') }}"
+                               placeholder="15.000.000"
+                               class="block w-full rounded-xl border-slate-300 shadow-sm focus:border-amber-500 focus:ring-amber-500">
+                        @error('monto')
+                            <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-                    <p class="mt-4 text-xs text-slate-500">
-                        Tramo: Gs. {{ number_format($resultado['tramo']['monto_desde'], 0, ',', '.') }} a Gs. {{ number_format($resultado['tramo']['monto_hasta'], 0, ',', '.') }}
-                        ({{ number_format($resultado['tramo']['porcentaje'], 2, ',', '.') }}% + Gs. {{ number_format($resultado['tramo']['adicional'], 0, ',', '.') }})
-                    </p>
-                </div>
-            @endif
+
+                    <div>
+                        @if (config('services.recaptcha.site_key'))
+                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                        @else
+                            <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía.</p>
+                        @endif
+                        @error('g-recaptcha-response')
+                            <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="w-full px-6 py-3.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition">
+                        Calcular impuesto
+                    </button>
+                </form>
+
+                @if (!session('buscado') && ($resultadoPatente = session('resultado')))
+                    <div class="mt-8 pt-6 border-t border-slate-200">
+                        <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Impuesto total</div>
+                        <div class="text-2xl font-extrabold text-slate-900 mb-5">Gs. {{ number_format($resultadoPatente['impuesto'], 0, ',', '.') }}</div>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                <div class="text-xs text-slate-500 mb-1">1ra cuota</div>
+                                <div class="font-bold text-slate-900">Gs. {{ number_format($resultadoPatente['semestre1'], 0, ',', '.') }}</div>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-4">
+                                <div class="text-xs text-slate-500 mb-1">2da cuota</div>
+                                <div class="font-bold text-slate-900">Gs. {{ number_format($resultadoPatente['semestre2'], 0, ',', '.') }}</div>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-xs text-slate-500">
+                            Tramo: Gs. {{ number_format($resultadoPatente['tramo']['monto_desde'], 0, ',', '.') }} a Gs. {{ number_format($resultadoPatente['tramo']['monto_hasta'], 0, ',', '.') }}
+                            ({{ number_format($resultadoPatente['tramo']['porcentaje'], 2, ',', '.') }}% + Gs. {{ number_format($resultadoPatente['tramo']['adicional'], 0, ',', '.') }})
+                        </p>
+                    </div>
+                @endif
+            </div>
+
+            <div id="calculadora-ruc" class="bg-white rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-200 p-8">
+                <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-lg mb-4">🔎</div>
+                <h3 class="font-bold text-lg text-slate-900 mb-1">Consulta de RUC</h3>
+                <p class="text-sm text-slate-500 mb-6">Verificá la razón social y el estado de un RUC paraguayo.</p>
+
+                <form method="POST" action="{{ route('publico.ruc.buscar') }}" class="space-y-5">
+                    @csrf
+                    <div>
+                        <label for="ruc" class="block text-sm font-semibold text-slate-700 mb-1.5">Número de RUC</label>
+                        <input id="ruc" name="ruc" type="text" inputmode="numeric" value="{{ old('ruc', session('buscado') ?? '') }}"
+                               placeholder="80012345"
+                               class="block w-full rounded-xl border-slate-300 shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                        @error('ruc')
+                            <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        @if (config('services.recaptcha.site_key'))
+                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                        @else
+                            <p class="text-xs text-amber-600">reCAPTCHA sin configurar todavía.</p>
+                        @endif
+                        @error('g-recaptcha-response')
+                            <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="w-full px-6 py-3.5 rounded-xl bg-sky-600 text-white font-semibold text-sm hover:bg-sky-700 transition">
+                        Consultar RUC
+                    </button>
+                </form>
+
+                @if (session('buscado'))
+                    <div class="mt-8 pt-6 border-t border-slate-200">
+                        @if ($resultadoRuc = session('resultado'))
+                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Razón social</div>
+                            <div class="text-lg font-extrabold text-slate-900 mb-4">{{ $resultadoRuc['razon_social'] }}</div>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div class="bg-slate-50 rounded-xl p-4">
+                                    <div class="text-xs text-slate-500 mb-1">RUC</div>
+                                    <div class="font-bold text-slate-900">{{ $resultadoRuc['ruc_completo'] }}</div>
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-4">
+                                    <div class="text-xs text-slate-500 mb-1">Estado</div>
+                                    <div class="font-bold text-slate-900">{{ $resultadoRuc['estado'] ?? '—' }}</div>
+                                </div>
+                            </div>
+                        @else
+                            <p class="text-sm text-slate-600">No se encontró ningún RUC con el número <strong>{{ session('buscado') }}</strong>.</p>
+                        @endif
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 </section>
@@ -308,7 +352,7 @@
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase mb-6">
                 ⚖️ Contrataciones Públicas
             </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight text-balance">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight text-balance">
                 Proveedor habilitado ante la DNCP
             </h2>
             <p class="mt-6 text-slate-400 leading-relaxed">
@@ -344,7 +388,7 @@
         <div class="flex items-center justify-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
             <span class="w-7 h-0.5 bg-amber-500"></span> Por qué elegirnos <span class="w-7 h-0.5 bg-amber-500"></span>
         </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Ventajas que nos diferencian</h2>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Ventajas que nos diferencian</h2>
     </div>
 
     <div class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -370,7 +414,7 @@
             <div class="flex items-center gap-3 text-xs font-bold tracking-widest text-sky-600 uppercase mb-4">
                 <span class="w-7 h-0.5 bg-amber-500"></span> Hablemos
             </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Contacto</h2>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Contacto</h2>
             <p class="mt-6 text-slate-600 leading-relaxed">
                 Para cotizaciones, consultas sobre licitaciones o propuestas de trabajo, no dude en comunicarse con nosotros.
             </p>
@@ -514,7 +558,8 @@
             <div class="text-xs font-bold text-white uppercase tracking-widest mb-5">Empresa</div>
             <ul class="space-y-3 text-sm text-slate-500">
                 <li><a href="#nosotros" class="hover:text-amber-400 transition">Quiénes somos</a></li>
-                <li><a href="#calculadora" class="hover:text-amber-400 transition">Calculadora de Patente</a></li>
+                <li><a href="#calculadora-patente" class="hover:text-amber-400 transition">Calculadora de Patente</a></li>
+                <li><a href="#calculadora-ruc" class="hover:text-amber-400 transition">Consulta de RUC</a></li>
                 <li><a href="#contacto" class="hover:text-amber-400 transition">Contacto</a></li>
             </ul>
         </div>
