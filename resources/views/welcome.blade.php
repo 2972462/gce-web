@@ -131,33 +131,23 @@
 
         <div class="grid lg:grid-cols-2 gap-6 items-start">
             <div id="calculadora-patente" class="bg-white rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200 p-6"
-                 x-data="patenteCalculadora({{ Js::from($tramosParaJs) }}, {{ Js::from(old('monto', '')) }})">
+                 x-data="patenteCalculadora({{ Js::from($tramosParaJs) }})">
                 <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-base mb-3">💰</div>
                 <h3 class="font-bold text-slate-900 mb-1">Patente Comercial</h3>
                 <p class="text-xs text-slate-500 mb-5">Cálculo según la Ley N° 135/91, con el detalle de las dos cuotas semestrales.</p>
 
-                <form method="POST" action="{{ route('publico.patente.calcular') }}" class="space-y-4">
-                    @csrf
-                    <div>
-                        <label for="monto" class="block text-sm font-semibold text-slate-700 mb-1.5">Monto del activo declarado (Gs.)</label>
-                        <div class="relative">
-                            <input id="monto" name="monto" type="text" inputmode="numeric" :value="montoFormateado" @input="actualizarMonto($event)"
-                                   placeholder="15.000.000"
-                                   class="block w-full text-right tabular-nums pr-9 rounded-xl border-slate-300 shadow-sm focus:border-amber-500 focus:ring-amber-500">
-                            <button type="button" x-show="monto !== ''" x-cloak @click="monto = ''" title="Limpiar"
-                                    class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-                        @error('monto')
-                            <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                <div>
+                    <label for="monto" class="block text-sm font-semibold text-slate-700 mb-1.5">Monto del activo declarado (Gs.)</label>
+                    <div class="relative">
+                        <input id="monto" name="monto" type="text" inputmode="numeric" :value="montoFormateado" @input="actualizarMonto($event)"
+                               placeholder="15.000.000"
+                               class="block w-full text-right tabular-nums pr-9 rounded-xl border-slate-300 shadow-sm focus:border-amber-500 focus:ring-amber-500">
+                        <button type="button" x-show="monto !== ''" x-cloak @click="monto = ''" title="Limpiar"
+                                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                        </button>
                     </div>
-
-                    <button type="submit" class="w-full px-6 py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition">
-                        Calcular impuesto
-                    </button>
-                </form>
+                </div>
 
                 <div x-show="resultado" x-cloak class="mt-6 pt-5 border-t border-slate-200">
                     <div class="grid grid-cols-3 gap-3 mb-4">
@@ -635,46 +625,6 @@
         </div>
     </div>
 </footer>
-
-<script>
-    function patenteCalculadora(tramos, montoInicial) {
-        return {
-            tramos,
-            monto: montoInicial ? String(montoInicial).replace(/\D/g, '') : '',
-
-            get montoNumerico() {
-                return this.monto === '' ? null : Number(this.monto);
-            },
-
-            get montoFormateado() {
-                return this.monto === '' ? '' : this.formatearGs(this.monto);
-            },
-
-            get resultado() {
-                if (this.montoNumerico === null || !this.tramos.length) return null;
-
-                const monto = this.montoNumerico;
-                const tramo = this.tramos.find((t) => monto >= t.desde && monto < t.hasta) || this.tramos[this.tramos.length - 1];
-                const excedente = Math.max(0, monto - tramo.desde);
-                const impuesto = Math.round(tramo.adicional + (excedente * tramo.porcentaje) / 100);
-                const semestre1 = Math.floor(impuesto / 2);
-                const semestre2 = impuesto - semestre1;
-
-                return { monto, tramo, excedente, impuesto, semestre1, semestre2 };
-            },
-
-            actualizarMonto(event) {
-                this.monto = event.target.value.replace(/\D/g, '');
-                event.target.value = this.montoFormateado;
-            },
-
-            formatearGs(valor) {
-                if (valor === null || valor === undefined || valor === '') return '';
-                return new Intl.NumberFormat('es-PY', { maximumFractionDigits: 0 }).format(valor);
-            },
-        };
-    }
-</script>
 
 @if (config('services.recaptcha.site_key'))
     <script>

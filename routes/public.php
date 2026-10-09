@@ -9,5 +9,4 @@ Route::prefix('consultas')->name('publico.')->group(function () {
     Route::post('ruc', [RucController::class, 'buscar'])->name('ruc.buscar')->middleware('throttle:10,1');
 
     Route::get('patente', [PatenteController::class, 'index'])->name('patente.index');
-    Route::post('patente', [PatenteController::class, 'calcular'])->name('patente.calcular')->middleware('throttle:10,1');
 });

@@ -28,6 +28,7 @@
             &copy; {{ now()->year }} Grupo Comercial Empresarial
         </footer>
 
+        @vite(['resources/js/app.js'])
         @stack('scripts')
     </body>
 </html>
