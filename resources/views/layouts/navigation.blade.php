@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('admin.paginas.index')" :active="request()->routeIs('admin.paginas.*')">
                         {{ __('Páginas') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.site-settings.edit')" :active="request()->routeIs('admin.site-settings.*')">
+                        {{ __('Configuración') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -75,6 +78,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.paginas.index')" :active="request()->routeIs('admin.paginas.*')">
                 {{ __('Páginas') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.site-settings.edit')" :active="request()->routeIs('admin.site-settings.*')">
+                {{ __('Configuración') }}
             </x-responsive-nav-link>
         </div>
 

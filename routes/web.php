@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\DeployWebhookController;
 use App\Http\Controllers\ProfileController;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', ['siteSetting' => SiteSetting::actual()]);
 });
 
 Route::post('/deploy-webhook', [DeployWebhookController::class, 'handle'])->name('deploy-webhook');
