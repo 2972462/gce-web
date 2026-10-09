@@ -92,3 +92,22 @@ puramente local, el acceso real queda acotado a gce-web en modo lectura.
 Completar en gce-web `AUX_DB_HOST=143.110.227.152` y `AUX_DB_USERNAME`/
 `AUX_DB_PASSWORD` con esas credenciales, despues `php artisan config:clear`
 (o `config:cache` de nuevo si se habia cacheado).
+
+## 5. Content-Security-Policy y Alpine.js
+
+El CSP real de gce.com.py no esta en este repo ni en el nginx del host:
+lo agrega Mailu (el proxy que realmente atiende el puerto 443 publico)
+desde `/mailu/overrides/nginx-http/gce_web.conf` en el servidor "mail".
+
+El `script-src` de ese CSP necesita **`'unsafe-eval'`** ademas de
+`'unsafe-inline'`, porque Alpine.js (usado en `welcome.blade.php` para
+el menu movil y las calculadoras embebidas) compila las expresiones de
+sus directivas (`x-show`, `x-text`, `:value`, etc.) con `new Function()`
+en tiempo de ejecucion. Sin `'unsafe-eval'` esas directivas fallan en
+silencio (el campo se ve bien pero no calcula nada) — el error solo
+aparece en la consola del navegador como `EvalError: ... 'unsafe-eval'
+is not an allowed source`.
+
+Si se regenera o resetea ese archivo de Mailu, hay que volver a agregar
+`'unsafe-eval'` al `script-src` y recargar: `docker exec mailu_front_1
+nginx -s reload`.
