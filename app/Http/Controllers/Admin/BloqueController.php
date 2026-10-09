@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BloqueRequest;
 use App\Models\Bloque;
 use App\Models\Seccion;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class BloqueController extends Controller
@@ -70,5 +72,21 @@ class BloqueController extends Controller
         $bloque->moveDown();
 
         return redirect()->route('admin.paginas.show', $bloque->seccion->pagina_id);
+    }
+
+    public function reorder(Request $request, Seccion $seccion): JsonResponse
+    {
+        $datos = $request->validate([
+            'orden' => ['required', 'array'],
+            'orden.*' => ['integer'],
+        ]);
+
+        $bloques = $seccion->bloques()->whereIn('id', $datos['orden'])->get()->keyBy('id');
+
+        foreach ($datos['orden'] as $posicion => $id) {
+            $bloques->get($id)?->update(['orden' => $posicion]);
+        }
+
+        return response()->json(['ok' => true]);
     }
 }

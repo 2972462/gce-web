@@ -12,6 +12,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('paginas/{pagina}', [PaginaController::class, 'destroy'])->name('paginas.destroy');
 
     Route::post('paginas/{pagina}/secciones', [SeccionController::class, 'store'])->name('secciones.store');
+    Route::post('paginas/{pagina}/secciones/reordenar', [SeccionController::class, 'reorder'])->name('secciones.reordenar');
     Route::put('secciones/{seccion}', [SeccionController::class, 'update'])->name('secciones.update');
     Route::delete('secciones/{seccion}', [SeccionController::class, 'destroy'])->name('secciones.destroy');
     Route::post('secciones/{seccion}/mover-arriba', [SeccionController::class, 'moveUp'])->name('secciones.mover-arriba');
@@ -19,6 +20,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('secciones/{seccion}/bloques/nuevo/{tipo?}', [BloqueController::class, 'create'])->name('bloques.create');
     Route::post('secciones/{seccion}/bloques', [BloqueController::class, 'store'])->name('bloques.store');
+    Route::post('secciones/{seccion}/bloques/reordenar', [BloqueController::class, 'reorder'])->name('bloques.reordenar');
     Route::get('bloques/{bloque}/editar', [BloqueController::class, 'edit'])->name('bloques.edit');
     Route::put('bloques/{bloque}', [BloqueController::class, 'update'])->name('bloques.update');
     Route::delete('bloques/{bloque}', [BloqueController::class, 'destroy'])->name('bloques.destroy');
