@@ -13,5 +13,7 @@ npm run build
 php artisan migrate --force
 php artisan storage:link
 php artisan config:cache
-php artisan route:cache
 php artisan view:cache
+# route:cache no se usa: routes/web.php define '/' y '/dashboard' como
+# closures, y Laravel no puede serializar closures para cachear rutas
+# (falla con "Uses Closure" y aborta el deploy antes de llegar a view:cache).
