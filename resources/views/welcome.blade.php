@@ -216,13 +216,12 @@
                 <details class="mt-5 pt-4 border-t border-slate-200">
                     <summary class="text-[11px] font-bold uppercase tracking-wide text-slate-400 cursor-pointer select-none">Escala de tramos vigente</summary>
                     <div class="mt-3 -mx-6 px-6 overflow-x-auto">
-                        <table class="min-w-full text-xs">
+                        <table class="w-full text-xs border-separate" style="border-spacing: 0;">
                             <thead class="text-slate-400 uppercase tracking-wide text-[10px]">
                                 <tr>
-                                    <th class="py-1.5 text-left">Desde</th>
-                                    <th class="py-1.5 text-left">Hasta</th>
-                                    <th class="py-1.5 text-right">%</th>
-                                    <th class="py-1.5 text-right">Adicional</th>
+                                    <th class="py-1.5 pr-3 text-left font-semibold">Tramo (Gs.)</th>
+                                    <th class="py-1.5 px-3 text-right font-semibold">%</th>
+                                    <th class="py-1.5 pl-3 text-right font-semibold">Adicional</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
@@ -233,16 +232,16 @@
                                             : "montoNumerico !== null && montoNumerico >= {$tramo->monto_desde} && montoNumerico < {$tramo->monto_hasta}";
                                     @endphp
                                     <tr :class="{{ $condicion }} ? 'bg-amber-50 font-bold text-amber-700' : 'text-slate-600'">
-                                        <td class="py-1.5 tabular-nums">{{ number_format($tramo->monto_desde, 0, ',', '.') }}</td>
-                                        <td class="py-1.5 tabular-nums">
+                                        <td class="py-1.5 pr-3 tabular-nums whitespace-nowrap">
+                                            {{ number_format($tramo->monto_desde, 0, ',', '.') }}
                                             @if ($loop->last)
-                                                En adelante
+                                                en adelante
                                             @else
-                                                {{ number_format($tramo->monto_hasta, 0, ',', '.') }}
+                                                – {{ number_format($tramo->monto_hasta, 0, ',', '.') }}
                                             @endif
                                         </td>
-                                        <td class="py-1.5 text-right tabular-nums">{{ rtrim(rtrim(number_format($tramo->porcentaje, 2, ',', '.'), '0'), ',') }}%</td>
-                                        <td class="py-1.5 text-right tabular-nums">{{ number_format($tramo->adicional, 0, ',', '.') }}</td>
+                                        <td class="py-1.5 px-3 text-right tabular-nums whitespace-nowrap">{{ rtrim(rtrim(number_format($tramo->porcentaje, 2, ',', '.'), '0'), ',') }}%</td>
+                                        <td class="py-1.5 pl-3 text-right tabular-nums whitespace-nowrap">{{ number_format($tramo->adicional, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
