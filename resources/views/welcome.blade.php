@@ -212,12 +212,15 @@
                                     @endphp
                                     <tr :class="{{ $condicion }} ? 'bg-amber-50 font-bold text-amber-700' : 'text-slate-600'">
                                         <td class="py-1.5 pr-3 tabular-nums whitespace-nowrap">
-                                            {{ number_format($tramo->monto_desde, 0, ',', '.') }}
-                                            @if ($loop->last)
-                                                en adelante
-                                            @else
-                                                – {{ number_format($tramo->monto_hasta, 0, ',', '.') }}
-                                            @endif
+                                            <span class="inline-flex items-baseline">
+                                                <span class="inline-block w-24 text-right">{{ number_format($tramo->monto_desde, 0, ',', '.') }}</span>
+                                                @if ($loop->last)
+                                                    <span class="ml-2 text-slate-400">en adelante</span>
+                                                @else
+                                                    <span class="mx-1.5 text-slate-400">–</span>
+                                                    <span class="inline-block w-24 text-right">{{ number_format($tramo->monto_hasta, 0, ',', '.') }}</span>
+                                                @endif
+                                            </span>
                                         </td>
                                         <td class="py-1.5 px-3 text-right tabular-nums whitespace-nowrap">{{ rtrim(rtrim(number_format($tramo->porcentaje, 2, ',', '.'), '0'), ',') }}%</td>
                                         <td class="py-1.5 pl-3 text-right tabular-nums whitespace-nowrap">{{ number_format($tramo->adicional, 0, ',', '.') }}</td>
